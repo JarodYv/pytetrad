@@ -1,5 +1,5 @@
 <h1 align="center" style="border-bottom: none;">bcoz</h1>
-<h3 align="center">A Python library for <i>causal discovery</i> with domain knowledge.</h3>
+<h3 align="center">因果发现Python库</h3>
 <p align="center">
     <a href="https://github.com/bradendubois/do-calculus/actions?query=workflow%3ATest+branch%3Amain">
         <img alt="Test Workflows" src="https://github.com/bradendubois/do-calculus/workflows/Test and Release/badge.svg">
