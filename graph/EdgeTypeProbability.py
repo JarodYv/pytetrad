@@ -1,6 +1,6 @@
 from enum import Enum
-from Edge import Edge
 from typing import List
+from graph.EdgeProperty import EdgeProperty
 
 
 class EdgeTypeProbability:
@@ -14,7 +14,7 @@ class EdgeTypeProbability:
         aa = 7
         tt = 8
 
-    def __init__(self, edge_type: EdgeType, properties: List[Edge.Property], probability: float):
+    def __init__(self, edge_type: EdgeType, properties: List[EdgeProperty], probability: float):
         self.edge_type = edge_type
         self.properties = properties
         self.probability = probability
@@ -25,17 +25,17 @@ class EdgeTypeProbability:
     def set_edge_type(self, _type: EdgeType):
         self.edge_type = _type
 
-    def add_property(self, _property: Edge.Property):
+    def add_property(self, _property: EdgeProperty):
         if not self.properties:
             self.properties = []
         if _property not in self.properties:
             self.properties.append(_property)
 
-    def remove_property(self, _property: Edge.Property):
+    def remove_property(self, _property: EdgeProperty):
         if self.properties and _property in self.properties:
             self.properties.remove(_property)
 
-    def get_properties(self) -> List[Edge.Property]:
+    def get_properties(self) -> List[EdgeProperty]:
         return self.properties
 
     def get_probability(self) -> float:

@@ -3,12 +3,13 @@ from graph.Graph import Graph
 from graph.Triple import Triple
 from graph.Endpoint import Endpoint
 from graph.GraphUtils import GraphUtils
-from IndependenceTest import IndependenceTest
-from GraphSearch import GraphSearch
-from MeekRules import MeekRules
-from SepsetMap import SepsetMap
-from SearchGraphUtils import SearchGraphUtils
-from OrientCollidersMaxP import OrientCollidersMaxP
+from search.IndependenceTest import IndependenceTest
+from search.ConflictRule import ConflictRule
+from search.GraphSearch import GraphSearch
+from search.MeekRules import MeekRules
+from search.SepsetMap import SepsetMap
+from search.SearchGraphUtils import SearchGraphUtils
+from search.OrientCollidersMaxP import OrientCollidersMaxP
 from data.Knowledge import Knowledge
 from data.Knowledge2 import Knowledge2
 from graph.Node import Node
@@ -18,28 +19,26 @@ import time
 import itertools
 
 
+class FasType(Enum):
+    REGULAR = 1
+    STABLE = 2
+
+
+class Concurrent(Enum):
+    YES = 1
+    NO = 2
+
+
+class ColliderDiscovery(Enum):
+    FAS_SEPSETS = 1
+    CONSERVATIVE = 2
+    MAX_P = 3
+
+
 class PcAll(GraphSearch):
     """ Implements a conservative version of PC, in which the Markov condition is assumed
     but faithfulness is tested locally.
     """
-
-    class FasType(Enum):
-        REGULAR = 1
-        STABLE = 2
-
-    class Concurrent(Enum):
-        YES = 1
-        NO = 2
-
-    class ConflictRule(Enum):
-        PRIORITY = 1
-        BIDIRECTED = 2
-        OVERWRITE = 3
-
-    class ColliderDiscovery(Enum):
-        FAS_SEPSETS = 1
-        CONSERVATIVE = 2
-        MAX_P = 3
 
     def __init__(self, independence_test: IndependenceTest, initial_graph: Graph):
         if not independence_test:
@@ -47,10 +46,10 @@ class PcAll(GraphSearch):
         self.independence_test = independence_test
         self.init_graph: Graph = initial_graph
         self.aggressively_prevent_cycles: bool = False
-        self.collider_discovery: PcAll.ColliderDiscovery = PcAll.ColliderDiscovery.FAS_SEPSETS
-        self.conflict_rule: PcAll.ConflictRule = PcAll.ConflictRule.OVERWRITE
-        self.fas_type = PcAll.FasType.REGULAR
-        self.concurrent = PcAll.Concurrent.YES
+        self.collider_discovery: ColliderDiscovery = ColliderDiscovery.FAS_SEPSETS
+        self.conflict_rule: ConflictRule = ConflictRule.OVERWRITE
+        self.fas_type = FasType.REGULAR
+        self.concurrent = Concurrent.YES
         self.depth: int = 1000
         self.elapsed_time: int = 0
         self.knowledge: Knowledge = Knowledge2()
@@ -84,15 +83,15 @@ class PcAll(GraphSearch):
         for n in nodes:
             if n not in all_nodes:
                 raise ValueError("All of the given nodes must be in the domain of the independence test provided.")
-        if self.fas_type == PcAll.FasType.REGULAR:
-            if self.concurrent == PcAll.Concurrent.NO:
+        if self.fas_type == FasType.REGULAR:
+            if self.concurrent == Concurrent.NO:
                 fas = Fas(self.init_graph, self.get_independence_test())
-                fas.set_heuristic(self.heuristic);
+                fas.set_heuristic(self.heuristic)
             else:
                 fas = FasConcurrent(self.init_graph, self.get_independence_test())
                 fas.setStable(False)
         else:
-            if self.concurrent == PcAll.Concurrent.NO:
+            if self.concurrent == Concurrent.NO:
                 fas = Fas(self.init_graph, self.get_independence_test())
                 fas.setStable(True)
             else:
@@ -108,10 +107,10 @@ class PcAll(GraphSearch):
 
         SearchGraphUtils.pc_orient_bk(self.knowledge, self.graph, nodes)
 
-        if self.collider_discovery == PcAll.ColliderDiscovery.FAS_SEPSETS:
+        if self.collider_discovery == ColliderDiscovery.FAS_SEPSETS:
             self.orient_colliders_using_sepsets(self.sepsets, self.knowledge, self.graph, self.verbose,
                                                 self.conflict_rule)
-        elif self.collider_discovery == PcAll.ColliderDiscovery.MAX_P:
+        elif self.collider_discovery == ColliderDiscovery.MAX_P:
             if self.verbose:
                 print("MaxP orientation...")
             orient_colliders_max_p: OrientCollidersMaxP = OrientCollidersMaxP(self.independence_test)
@@ -120,7 +119,7 @@ class PcAll(GraphSearch):
             orient_colliders_max_p.set_max_path_length(self.max_path_length)
             orient_colliders_max_p.set_depth(self.depth)
             orient_colliders_max_p.orient(self.graph)
-        elif self.collider_discovery == PcAll.ColliderDiscovery.CONSERVATIVE:
+        elif self.collider_discovery == ColliderDiscovery.CONSERVATIVE:
             if self.verbose:
                 print("CPC orientation...")
             self.orient_unshielded_triples_conservative(self.knowledge)
@@ -209,16 +208,16 @@ class PcAll(GraphSearch):
 
     @classmethod
     def _orient_collider(cls, x: Node, y: Node, z: Node, conflict_rule: ConflictRule, graph: Graph):
-        if conflict_rule == PcAll.ConflictRule.PRIORITY:
+        if conflict_rule == ConflictRule.PRIORITY:
             if not (graph.get_endpoint(y, x) == Endpoint.ARROW or graph.get_endpoint(y, z) == Endpoint.ARROW):
                 graph.remove_connecting_edge(x, y)
                 graph.remove_connecting_edge(z, y)
                 graph.add_directed_edge(x, y)
                 graph.add_directed_edge(z, y)
-        elif conflict_rule == PcAll.ConflictRule.BIDIRECTED:
+        elif conflict_rule == ConflictRule.BIDIRECTED:
             graph.set_endpoint(x, y, Endpoint.ARROW)
             graph.set_endpoint(z, y, Endpoint.ARROW)
-        elif conflict_rule == PcAll.ConflictRule.OVERWRITE:
+        elif conflict_rule == ConflictRule.OVERWRITE:
             graph.remove_connecting_edge(x, y)
             graph.remove_connecting_edge(z, y)
             graph.add_directed_edge(x, y)
@@ -286,6 +285,18 @@ class PcAll(GraphSearch):
         if depth < -1:
             raise ValueError(f"Depth must be -1 or >= 0: {depth}")
         self.depth = depth
+
+    def set_heuristic(self, heuristic: int):
+        self.heuristic = heuristic
+
+    def set_use_heuristic(self, use_heuristic: bool):
+        self.use_heuristic = use_heuristic
+
+    def set_max_path_length(self, max_path_length: int):
+        self.max_path_length = max_path_length
+
+    def get_max_path_length(self) -> int:
+        return self.max_path_length
 
     def get_depth(self) -> int:
         return self.depth

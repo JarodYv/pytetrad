@@ -1,7 +1,7 @@
-from KnowledgeTransferable import KnowledgeTransferable
-from VariableSource import VariableSource
+from data.KnowledgeTransferable import KnowledgeTransferable
+from data.VariableSource import VariableSource
 from graph.Node import Node
-from Knowledge import Knowledge
+from data.Knowledge import Knowledge
 from typing import List
 
 

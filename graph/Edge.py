@@ -1,10 +1,10 @@
-from Node import Node
+from graph.EdgeProperty import EdgeProperty
+from graph.Node import Node
 from util import Color
 from typing import List
-from EdgeTypeProbability import EdgeTypeProbability
-from NodeEqualityMode import NodeEqualityMode
+from graph.EdgeTypeProbability import EdgeTypeProbability
 from graph.Endpoint import Endpoint
-from NodeEqualityMode import *
+from graph.NodeEqualityMode import *
 
 
 class Edge:
@@ -14,12 +14,6 @@ class Edge:
     Note that because speed is of the essence, and Edge cannot be compared to an
     object of any other type; this will throw an exception.
     """
-
-    class Property(Enum):
-        dd = 1
-        nl = 2
-        pd = 3
-        pl = 4
 
     def __init__(self, node1: Node, node2: Node, endpoint1: Endpoint, endpoint2: Endpoint):
         """ Constructs a new edge by specifying the nodes it connects and the endpoint types.
@@ -92,17 +86,17 @@ class Edge:
     def set_bold(self, bold: bool):
         self.bold = bold
 
-    def add_property(self, _property: Property):
+    def add_property(self, _property: EdgeProperty):
         if not self.properties:
             self.properties = []
         if _property not in self.properties:
             self.properties.append(_property)
 
-    def remove_property(self, _property: Property):
+    def remove_property(self, _property: EdgeProperty):
         if _property in self.properties:
             self.properties.remove(_property)
 
-    def get_properties(self) -> List[Property]:
+    def get_properties(self) -> List[EdgeProperty]:
         return self.properties
 
     def add_edge_type_probability(self, _property: EdgeTypeProbability):

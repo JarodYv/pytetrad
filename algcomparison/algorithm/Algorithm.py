@@ -1,5 +1,5 @@
 from algcomparison.utils.HasParameters import HasParameters
-from graph import Graph
+from graph.Graph import Graph
 from util import Parameters
 from data.DataType import DataType
 from data.DataModel import DataModel

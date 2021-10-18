@@ -1,15 +1,14 @@
 import itertools
 
-from Graph import Graph
-from GraphUtils import GraphUtils
-from Node import Node
+from graph.Graph import Graph
+from graph.GraphUtils import GraphUtils
+from graph.Node import Node
 from typing import List, Dict, Set
-from Edges import Edges
-from Edge import Edge
-from Endpoint import Endpoint
-from Triple import Triple
-from NodeType import NodeType
-from TimeLagGraph import TimeLagGraph
+from graph.Edges import Edges
+from graph.Edge import Edge
+from graph.Endpoint import Endpoint
+from graph.Triple import Triple
+from graph.NodeType import NodeType
 
 
 class EdgeListGraph(Graph):
@@ -676,7 +675,7 @@ class EdgeListGraph(Graph):
     def is_time_lag_model(self) -> bool:
         return False
 
-    def get_time_lag_graph(self) -> TimeLagGraph:
+    def get_time_lag_graph(self):
         return None
 
     def remove_triples_not_in_graph(self):

@@ -1,6 +1,7 @@
 from typing import List
-from graph import Node
+from graph.Node import Node
 from data.DataModel import DataModel
+import numpy as np
 
 
 class IndependenceTest:
@@ -92,16 +93,16 @@ class IndependenceTest:
     def get_data(self) -> DataModel:
         raise NotImplementedError
 
-    def get_cov(self) -> CovarianceMatrix:
+    def get_cov(self):
         raise NotImplementedError
 
-    def get_datasets(self) -> List[DataSet]:
+    def get_datasets(self) -> List:
         raise NotImplementedError
 
     def get_sample_size(self) -> int:
         raise NotImplementedError
 
-    def get_cov_matrices(self) -> List[Matrix]:
+    def get_cov_matrices(self) -> List[np.ndarray]:
         raise NotImplementedError
 
     def get_score(self) -> float:

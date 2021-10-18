@@ -1,6 +1,6 @@
 from typing import Dict
-from NodeType import NodeType
-from NodeVariableType import NodeVariableType
+from graph.NodeType import NodeType
+from graph.NodeVariableType import NodeVariableType
 
 
 class Node:

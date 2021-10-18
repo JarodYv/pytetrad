@@ -1,8 +1,6 @@
 from graph.Node import Node
-from graph.Graph import Graph
-from graph.GraphUtils import GraphUtils
 from typing import List
-
+from graph import Graph
 
 class Triple:
     """
@@ -42,7 +40,9 @@ class Triple:
     def along_path_in(self, graph: Graph) -> bool:
         return graph.is_adjacent_to(self.x, self.y) and graph.is_adjacent_to(self.y, self.z) and self.x != self.z
 
+
     @classmethod
     def path_string(cls, graph: Graph, x: Node, y: Node, z: Node):
+        from graph.GraphUtils import GraphUtils
         path: List[Node] = [x, y, z]
         return GraphUtils.path_string(path, graph)

@@ -1,6 +1,6 @@
-from typing import Set, Dict
+from typing import Set, Dict, List
 
-from ImpliedOrientation import ImpliedOrientation
+from search.ImpliedOrientation import ImpliedOrientation
 from data.Knowledge import Knowledge
 from data.Knowledge2 import Knowledge2
 from graph.Graph import Graph
@@ -37,7 +37,7 @@ class MeekRules(ImpliedOrientation):
         visited: Set[Node] = Set[Node]()
         self.logger.info("Starting Orientation Step D.")
         if self.revert_to_unshielded_colliders:
-            self.revertToUnshieldedColliders(graph.get_nodes(), graph, visited)
+            self.revert_to_unshielded_colliders(graph.get_nodes(), graph, visited)
         oriented = True
         while oriented:
             oriented = False
@@ -52,6 +52,36 @@ class MeekRules(ImpliedOrientation):
                            self.meek_r4(x, y, graph, visited) or self.meek_r4(y, x, graph, visited)
         self.logger.info("Finishing Orientation Step D.")
         return visited
+
+    def revert_to_unshielded_colliders(self, nodes: List[Node], graph: Graph, visited: Set[Node]):
+        reverted = True
+        while reverted:
+            reverted = False
+            for node in nodes:
+                if self._revert_to_unshielded_colliders(node, graph, visited):
+                    reverted = True
+
+    def _revert_to_unshielded_colliders(self, y: Node, graph: Graph, visited: Set[Node]) -> bool:
+        did = False
+        patterns = graph.get_parents(y)
+        for p in patterns:
+            for q in patterns:
+                if not (p == q or graph.is_adjacent_to(p, q)):
+                    break
+            else:
+                continue
+            if self.knowledge.is_forbidden(y.get_name(), p.get_name()) or self.knowledge.is_required(p.get_name(),
+                                                                                                     y.get_name()):
+                continue
+            graph.remove_connecting_edge(p, y)
+            graph.add_undirected_edge(p, y)
+            visited.add(p)
+            visited.add(y)
+            did = True
+        return did
+
+    def set_revert_to_unshielded_colliders(self, revert_to_unshielded_colliders: bool):
+        self.revert_to_unshielded_colliders = revert_to_unshielded_colliders
 
     def set_verbose(self, verbose: bool):
         self.verbose = verbose

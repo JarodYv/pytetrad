@@ -1,6 +1,9 @@
 from data.Knowledge import Knowledge
+from data.Knowledge2 import Knowledge2
 from graph.Graph import Graph
 from graph.Node import Node
+from graph.EdgeListGraph import EdgeListGraph
+from search.MeekRules import MeekRules
 from typing import List
 
 
@@ -56,3 +59,14 @@ class SearchGraphUtils:
             if node.get_name() == name:
                 return node
         return None
+
+    @classmethod
+    def pattern_for_dag(cls, dag: Graph, knowledge: Knowledge = None) -> Graph:
+        if not knowledge:
+            knowledge = Knowledge2()
+        pattern = EdgeListGraph(dag)
+        rules = MeekRules()
+        rules.set_knowledge(knowledge)
+        rules.set_revert_to_unshielded_colliders(True)
+        rules.orient_implied(pattern)
+        return pattern

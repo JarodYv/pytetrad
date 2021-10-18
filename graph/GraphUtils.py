@@ -1,9 +1,8 @@
-from Graph import Graph
-from EdgeListGraph import EdgeListGraph
-from Node import Node
-from Edge import Edge
-from Edges import Edges
-from Endpoint import Endpoint
+from graph.Graph import Graph
+from graph.Node import Node
+from graph.Edge import Edge
+from graph.Edges import Edges
+from graph.Endpoint import Endpoint
 from typing import List
 
 
@@ -57,6 +56,7 @@ class GraphUtils:
         :param new_variables: The new variables to use, with the same names as the old ones.
         :return: A new, converted, graph
         """
+        from graph.EdgeListGraph import EdgeListGraph
         reference = EdgeListGraph(new_variables)
         converted_graph = EdgeListGraph(new_variables)
         if not original_graph:

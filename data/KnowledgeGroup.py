@@ -1,7 +1,7 @@
 from typing import Set, List
 from util.StringUtils import compare_set
 
-from KnowledgeEdge import KnowledgeEdge
+from data.KnowledgeEdge import KnowledgeEdge
 
 REQUIRED = 1
 FORBIDDEN = 2

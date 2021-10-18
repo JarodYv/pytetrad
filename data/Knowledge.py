@@ -1,6 +1,6 @@
 from typing import Set, List, Iterable
-from KnowledgeGroup import KnowledgeGroup
-from KnowledgeEdge import KnowledgeEdge
+from data.KnowledgeGroup import KnowledgeGroup
+from data.KnowledgeEdge import KnowledgeEdge
 from graph.Graph import Graph
 from graph.Node import Node
 

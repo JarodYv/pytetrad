@@ -1,4 +1,4 @@
-from Knowledge import Knowledge
+from data.Knowledge import Knowledge
 
 
 class KnowledgeTransferable:

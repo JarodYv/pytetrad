@@ -1,4 +1,4 @@
-from Graph import Graph
+from graph.Graph import Graph
 
 
 class TimeLagGraph(Graph):

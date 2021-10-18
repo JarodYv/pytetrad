@@ -1,8 +1,7 @@
-from Node import Node
-from Edge import Edge
-from Endpoint import Endpoint
-from Triple import Triple
-from TimeLagGraph import TimeLagGraph
+from graph.Node import Node
+from graph.Edge import Edge
+from graph.Endpoint import Endpoint
+from graph.Triple import Triple
 from typing import List, Set, Dict
 
 
@@ -471,7 +470,7 @@ class Graph:
     def is_time_lag_model(self) -> bool:
         raise NotImplementedError
 
-    def get_time_lag_graph(self) -> TimeLagGraph:
+    def get_time_lag_graph(self):
         raise NotImplementedError
 
     def remove_triples_not_in_graph(self):

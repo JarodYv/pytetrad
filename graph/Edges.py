@@ -1,6 +1,6 @@
-from Edge import Edge
-from Node import Node
-from Endpoint import Endpoint
+from graph.Edge import Edge
+from graph.Node import Node
+from graph.Endpoint import Endpoint
 
 
 class Edges:

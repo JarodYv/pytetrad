@@ -25,8 +25,9 @@ class IndependenceWrapper(HasParameters):
 
         :return:
         """
+        raise NotImplementedError
 
-    def get_test(self, dataset: DataModel, parameters: Parameters):
+    def get_test(self, dataset: DataModel, **parameters):
         """ Returns true iff x and y are independent conditional on z for the given data set.
 
         :param dataset: The data set to test independence against

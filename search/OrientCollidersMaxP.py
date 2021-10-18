@@ -1,9 +1,9 @@
 import itertools
 
-from IndependenceTest import IndependenceTest
+from search.IndependenceTest import IndependenceTest
+from search.ConflictRule import ConflictRule
 from data.Knowledge import Knowledge
 from data.Knowledge2 import Knowledge2
-from PcAll import PcAll
 from graph.Graph import Graph
 from graph.Edges import Edges
 from graph.GraphUtils import GraphUtils
@@ -27,7 +27,7 @@ class OrientCollidersMaxP:
         self.knowledge: Knowledge = Knowledge2()
         self.use_heuristic: bool = False
         self.max_path_length: int = 3
-        self.conflict_rule = PcAll.ConflictRule.OVERWRITE
+        self.conflict_rule = ConflictRule.OVERWRITE
 
     def get_depth(self) -> int:
         """ Return the depth of search for the Fast Adjacency Search.
@@ -59,10 +59,10 @@ class OrientCollidersMaxP:
     def set_max_path_length(self, max_path_length: int):
         self.max_path_length = max_path_length
 
-    def get_conflict_rule(self) -> PcAll.ConflictRule:
+    def get_conflict_rule(self) -> ConflictRule:
         return self.conflict_rule
 
-    def set_conflict_rule(self, conflict_rule: PcAll.ConflictRule):
+    def set_conflict_rule(self, conflict_rule: ConflictRule):
         self.conflict_rule = conflict_rule
 
     def orient(self, graph: Graph):
@@ -102,7 +102,7 @@ class OrientCollidersMaxP:
             else:
                 self._test_collider_max_p(graph, scores, a, b, c)
 
-    def _orient_collider(self, graph: Graph, a: Node, b: Node, c: Node, conflict_rule: PcAll.ConflictRule):
+    def _orient_collider(self, graph: Graph, a: Node, b: Node, c: Node, conflict_rule: ConflictRule):
         if self.knowledge.is_forbidden(a.get_name(), b.get_name()):
             return
         if self.knowledge.is_forbidden(c.get_name(), b.get_name()):
@@ -204,17 +204,17 @@ class OrientCollidersMaxP:
         return False
 
     @classmethod
-    def orient_collider(cls, x: Node, y: Node, z: Node, graph: Graph, conflict_rule: PcAll.ConflictRule):
-        if conflict_rule == PcAll.ConflictRule.PRIORITY:
+    def orient_collider(cls, x: Node, y: Node, z: Node, graph: Graph, conflict_rule: ConflictRule):
+        if conflict_rule == ConflictRule.PRIORITY:
             if not (graph.get_endpoint(y, x) == Endpoint.ARROW or graph.get_endpoint(y, z) == Endpoint.ARROW):
                 graph.remove_connecting_edge(x, y)
                 graph.remove_connecting_edge(z, y)
                 graph.add_directed_edge(x, y)
                 graph.add_directed_edge(z, y)
-        elif conflict_rule == PcAll.ConflictRule.BIDIRECTED:
+        elif conflict_rule == ConflictRule.BIDIRECTED:
             graph.set_endpoint(x, y, Endpoint.ARROW)
             graph.set_endpoint(z, y, Endpoint.ARROW)
-        elif conflict_rule == PcAll.ConflictRule.OVERWRITE:
+        elif conflict_rule == ConflictRule.OVERWRITE:
             graph.remove_connecting_edge(x, y)
             graph.remove_connecting_edge(z, y)
             graph.add_directed_edge(x, y)
