@@ -23,3 +23,5 @@
 <p align="center">
 <a href="README.md">[English]</a>  |  <a href="README.zh-CN.md">[中文]</a>
 </p>
+
+bcoz [bɪˈkɔːz], with the similar pronunciation of 'because', is a powerful Python library for causal inference.
