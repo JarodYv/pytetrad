@@ -2,9 +2,12 @@ from graph.Node import Node
 from typing import List
 from graph import Graph
 
+
 class Triple:
     """
-    Stores a triple (x, y, z) of nodes. Note that (x, y, z) = (z, y, x). Useful for marking graphs.
+    Stores a triple (x, y, z) of nodes.
+    Note that (x, y, z) = (z, y, x).
+    Useful for marking graphs.
     """
 
     def __init__(self, x: Node, y: Node, z: Node):
@@ -39,7 +42,6 @@ class Triple:
 
     def along_path_in(self, graph: Graph) -> bool:
         return graph.is_adjacent_to(self.x, self.y) and graph.is_adjacent_to(self.y, self.z) and self.x != self.z
-
 
     @classmethod
     def path_string(cls, graph: Graph, x: Node, y: Node, z: Node):

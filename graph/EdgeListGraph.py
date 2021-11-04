@@ -22,7 +22,7 @@ class EdgeListGraph(Graph):
     Edges from nodes to themselves may also be added.
     """
 
-    def __init__(self, graph: Graph, nodes: List[Node]):
+    def __init__(self, graph: Graph = None, nodes: List[Node] = None):
         self.edge_lists = Dict[Node, List[Edge]]()
         self.nodes = List[Node]()
         self.edges_set = Set[Node]()
@@ -425,9 +425,9 @@ class EdgeListGraph(Graph):
         for edge in edges:
             _node1 = edge.get_distal_node(node2) == node1
             _node3 = edge.get_distal_node(node2) == node3
-            if _node1 and edge.points_toward(node1):
+            if _node1 and edge.points_towards(node1):
                 return True
-            if _node3 and edge.points_toward(node3):
+            if _node3 and edge.points_towards(node3):
                 return True
             if _node1 and edge.get_proximal_endpoint(node2) == Endpoint.CIRCLE:
                 circle12 = True
@@ -469,7 +469,7 @@ class EdgeListGraph(Graph):
         if len(edges) != 1:
             return False
         edge = edges[0]
-        return edge.points_toward(node2)
+        return edge.points_towards(node2)
 
     def is_undirected_from_to(self, node1: Node, node2: Node) -> bool:
         edge = self.get_edge(node1, node2)

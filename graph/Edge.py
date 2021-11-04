@@ -1,10 +1,11 @@
 from graph.EdgeProperty import EdgeProperty
+from graph.Edges import Edges
 from graph.Node import Node
 from util import Color
 from typing import List
 from graph.EdgeTypeProbability import EdgeTypeProbability
 from graph.Endpoint import Endpoint
-from graph.NodeEqualityMode import *
+from graph.NodeEqualityMode import NodeEqualityMode
 
 
 class Edge:
@@ -31,7 +32,7 @@ class Edge:
                 'Endpoints must not be of NoneType. endpoint1 = ' + str(endpoint1) + ' endpoint2 = ' + str(endpoint2))
 
         # assign nodes and endpoints; if the edge points left, flip it
-        if self.pointing_left(endpoint1, endpoint2):
+        if Edges.pointing_left(endpoint1, endpoint2):
             self.node1: Node = node2
             self.node2: Node = node1
             self.endpoint1: Endpoint = endpoint2
@@ -42,33 +43,45 @@ class Edge:
             self.endpoint1: Endpoint = endpoint1
             self.endpoint2: Endpoint = endpoint2
 
-        self.properties: List[Edge.Property] = []
+        self.properties: List[EdgeProperty] = []
         self.edge_type_probabilities: List[EdgeTypeProbability] = []
         self.bold: bool = False
         self.color: Color = None
 
-    # return the A node
     def get_node1(self) -> Node:
+        """ return the A node
+
+        """
         return self.node1
 
-    # return the B node
     def get_node2(self) -> Node:
+        """ return the B node
+
+        """
         return self.node2
 
-    # return the endpoint of the edge at the A node
     def get_endpoint1(self) -> Endpoint:
+        """ return the endpoint of the edge at the A node
+
+        """
         return self.endpoint1
 
-    # return the endpoint of the edge at the B node
     def get_endpoint2(self) -> Endpoint:
+        """ return the endpoint of the edge at the B node
+
+        """
         return self.endpoint2
 
-    # set the endpoint of the edge at the A node
     def set_endpoint1(self, endpoint: Endpoint):
+        """ set the endpoint of the edge at the A node
+
+        """
         self.endpoint1 = endpoint
 
-    # set the endpoint of the edge at the B node
     def set_endpoint2(self, endpoint: Endpoint):
+        """ set the endpoint of the edge at the B node
+
+        """
         self.endpoint2 = endpoint
 
     def is_null(self) -> bool:
@@ -112,9 +125,11 @@ class Edge:
     def get_edge_type_probabilities(self) -> List[EdgeTypeProbability]:
         return self.edge_type_probabilities
 
-    # return the endpoint nearest to the given node; returns NoneType if the
-    # given node is not along the edge
     def get_proximal_endpoint(self, node: Node) -> Endpoint:
+        """ return the endpoint nearest to the given node;
+        if the given node is not along the edge, returns NoneType
+
+        """
         if self.node1 is node:
             return self.endpoint1
         elif self.node2 is node:
@@ -122,9 +137,11 @@ class Edge:
         else:
             return None
 
-    # return the endpoint furthest from the given node; returns NoneType if the
-    # given node is not along the edge
     def get_distal_endpoint(self, node: Node) -> Endpoint:
+        """ return the endpoint furthest from the given node;
+        if the given node is not along the edge, returns NoneType
+
+        """
         if self.node1 is node:
             return self.endpoint2
         elif self.node2 is node:
@@ -132,9 +149,11 @@ class Edge:
         else:
             return None
 
-    # traverses the edge in an undirected fashion: given one node along the
-    # edge, returns the node at the opposite end of the edge
     def get_distal_node(self, node: Node) -> Node:
+        """ traverses the edge in an undirected fashion:
+        given one node along the edge, returns the node at the opposite end of the edge
+
+        """
         if self.node1 is node:
             return self.node2
         elif self.node2 is node:
@@ -142,7 +161,13 @@ class Edge:
         else:
             return None
 
-    def points_toward(self, node: Node) -> bool:
+    def is_directed(self) -> bool:
+        """
+        return true just in case this edge is directed.
+        """
+        return Edges.is_directed_edge(self)
+
+    def points_towards(self, node: Node) -> bool:
         """ check if the edge is pointing toward the given node
         There are 2 cases: x --> node or x o--> node.
 
@@ -232,18 +257,17 @@ class Edge:
                     properties = p.get_properties()
                     if properties:
                         for _p in properties:
-                            _type = _type + " " + _p
+                            _type += " %s" % _p
                     s += ("[%s]: %.4f;" % (_type, p.get_probability()))
         if self.properties:
             for p in self.properties:
                 s += (" %s" % p)
         return s
 
-    def pointing_left(self, endpoint1: Endpoint, endpoint2: Endpoint) -> bool:
+    def pointing_left(self) -> bool:
         """ Is the edge points from right to left?
 
-        :param endpoint1:
-        :param endpoint2:
         :return: returns True if the edge is pointing "left"
         """
-        return endpoint1 == Endpoint.ARROW and (endpoint2 == Endpoint.TAIL or endpoint2 == Endpoint.CIRCLE)
+        return self.endpoint1 == Endpoint.ARROW and (
+                    self.endpoint2 == Endpoint.TAIL or self.endpoint2 == Endpoint.CIRCLE)

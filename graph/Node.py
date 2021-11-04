@@ -13,7 +13,7 @@ class Node:
 
         :return: the name of the node
         """
-        pass
+        raise NotImplementedError
 
     def set_name(self, name: str):
         """ Sets the name of this node
@@ -21,14 +21,14 @@ class Node:
         :param name: the name of the node
         :return:
         """
-        pass
+        raise NotImplementedError
 
     def get_node_type(self) -> NodeType:
         """ Get node type of the variable
 
         :return: the node type of the variable
         """
-        pass
+        raise NotImplementedError
 
     def set_node_type(self, node_type: NodeType):
         """ Set the node type of the variable
@@ -36,14 +36,14 @@ class Node:
         :param node_type: the node type of the variable
         :return:
         """
-        pass
+        raise NotImplementedError
 
     def get_node_variable_type(self) -> NodeVariableType:
         """ Get the intervention type
 
         :return: the intervention type
         """
-        pass
+        raise NotImplementedError
 
     def set_node_variable_type(self, variable_type: NodeVariableType):
         """ Set the type for this node variable
@@ -51,40 +51,55 @@ class Node:
         :param variable_type: the type for this node variable
         :return:
         """
-        pass
+        raise NotImplementedError
 
-    # @return the x coordinate of the center of the node
-    def get_center_x(self):
-        pass
+    def get_center_x(self) -> int:
+        """ Get the x coordinate of the center of the node
 
-    # sets the x coordinate of the center of the node
+        :return: the x coordinate of the center of the node
+        """
+        raise NotImplementedError
+
     def set_center_x(self, center_x: int):
-        pass
+        """ Set the x coordinate of the center of the node
+
+        """
+        raise NotImplementedError
 
     # @return the y coordinate of the center of the node
-    def get_center_y(self):
-        pass
+    def get_center_y(self) -> int:
+        """ Get the y coordinate of the center of the node
 
-    # sets the y coordinate of the center of the node
+        :return: the y coordinate of the center of the node
+        """
+        raise NotImplementedError
+
     def set_center_y(self, center_y: int):
-        pass
+        """ Set the y coordinate of the center of the node
 
-    # sets the [x, y] coordinates of the center of the node
+        """
+        raise NotImplementedError
+
     def set_center(self, center_x: int, center_y: int):
-        pass
+        """ Set the [x, y] coordinates of the center of the node
 
-    # creates a new node of the same type as this one with the given name
+        """
+        raise NotImplementedError
+
     def like(self, name: str):
-        pass
+        """ creates a new node of the same type as this one with the given name
+
+        """
+        raise NotImplementedError
 
     def get_all_attributes(self) -> Dict[str, object]:
-        pass
+        raise NotImplementedError
 
     def get_attribute(self, key: str) -> object:
-        pass
+        raise NotImplementedError
 
     def remove_attribute(self, key: str):
-        pass
+        raise NotImplementedError
 
     def add_attribute(self, key: str, value: object):
-        pass
+        raise NotImplementedError

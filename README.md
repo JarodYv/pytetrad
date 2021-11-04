@@ -1,5 +1,5 @@
 <h1 align="center" style="border-bottom: none;">bcoz</h1>
-<h3 align="center">A Python library for <i>causal discovery</i> with domain knowledge.</h3>
+<h3 align="center">A Python library for <i>causal discovery</i></h3>
 <p align="center">
     <a href="https://github.com/bradendubois/do-calculus/actions?query=workflow%3ATest+branch%3Amain">
         <img alt="Test Workflows" src="https://github.com/bradendubois/do-calculus/workflows/Test and Release/badge.svg">
@@ -13,10 +13,13 @@
     <a href="https://pypi.org/project/do-calculus/">
         <img alt="" src="https://pypip.in/wheel/do-calculus/badge.svg">
     </a>
-    <a href="https://github.com/semantic-release/semantic-release">
-        <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg">
+    <a href="https://github.com/planplus/bcoz/LICENSE">
+        <img alt="license" src="https://img.shields.io/github/license/planplus/bcoz?style=flat-square">
     </a>
 </p>
 <p align="center">
-    README <a href="README.md">[English]</a> | <a href="README.zh-CN.md">[中文]</a>
+:octocat:<a href="https://github.com/planplus/bcoz"><img src="https://img.shields.io/badge/-created%20for%20causal%20inference%20-blue?style=for-the-badge&logo=github"></a>:octocat:
+</p>
+<p align="center">
+<a href="README.md">[English]</a>  |  <a href="README.zh-CN.md">[中文]</a>
 </p>

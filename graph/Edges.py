@@ -139,3 +139,13 @@ class Edges:
         if edge.get_endpoint2() == Endpoint.ARROW and edge.get_endpoint1() == Endpoint.TAIL:
             return edge.get_node2()
         raise ValueError(f"Not a directed edge: {edge}")
+
+    @classmethod
+    def pointing_left(cls, endpoint1: Endpoint, endpoint2: Endpoint) -> bool:
+        """ Is the edge points from right to left?
+
+        :param endpoint1:
+        :param endpoint2:
+        :return: returns True if the edge is pointing "left"
+        """
+        return endpoint1 == Endpoint.ARROW and (endpoint2 == Endpoint.TAIL or endpoint2 == Endpoint.CIRCLE)
