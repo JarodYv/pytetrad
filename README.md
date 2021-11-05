@@ -1,5 +1,5 @@
 <h1 align="center" style="border-bottom: none;">bcoz</h1>
-<h3 align="center">A Python library for <i>causal discovery</i></h3>
+<h3 align="center">A Python library for <i>causal inference</i></h3>
 <p align="center">
     <a href="https://github.com/bradendubois/do-calculus/actions?query=workflow%3ATest+branch%3Amain">
         <img alt="Test Workflows" src="https://github.com/bradendubois/do-calculus/workflows/Test and Release/badge.svg">
@@ -23,3 +23,5 @@
 <p align="center">
 <a href="README.md">[English]</a>  |  <a href="README.zh-CN.md">[中文]</a>
 </p>
+
+**bcoz** _[bɪˈkɔːz]_, with the similar pronunciation of because, is a powerful Python library for causal inference.
