@@ -2,8 +2,10 @@ from graph.Graph import Graph
 from graph.Node import Node
 from graph.Edge import Edge
 from graph.Edges import Edges
+from graph.Triple import Triple
 from graph.Endpoint import Endpoint
-from typing import List
+from graph.EdgeProperty import EdgeProperty
+from typing import List, Set, Dict
 
 
 class GraphUtils:
@@ -149,3 +151,182 @@ class GraphUtils:
     @classmethod
     def _is_d_connected_to_1(cls, x: Node, y: Node, z: List[Node], graph: Graph) -> bool:
         pass
+
+    @classmethod
+    def add_pag_coloring(cls, graph: Graph):
+        for edge in graph.get_graph_edges():
+            if not Edges.is_directed_edge(edge):
+                continue
+            x = Edges.get_directed_edge_tail(edge)
+            y = Edges.get_directed_edge_head(edge)
+
+            graph.remove_edge(edge)
+            graph.add_edge(edge)
+
+            xy_edge = graph.get_edge(x, y)
+            graph.remove_edge(xy_edge)
+
+            if cls.exists_semi_directed_path(x, y, graph):
+                edge.add_property(EdgeProperty.pd)
+            else:
+                edge.add_property(EdgeProperty.dd)  # green
+
+            graph.add_edge(xy_edge)
+            if graph.def_visible(edge):
+                edge.add_property(EdgeProperty.nl)  # bold
+            else:
+                edge.add_property(EdgeProperty.pl)
+
+    @classmethod
+    def exists_semi_directed_path(cls, node1: Node, node2: Node, graph: Graph) -> bool:
+        q = list()
+        v = set()
+        for n in graph.get_adjacent_nodes(node1):
+            edge = graph.get_edge(node1, n)
+            c = Edges.traverse_semi_directed(node1, edge)
+            if not c:
+                continue
+            if c not in v:
+                v.add(c)
+                q.append(c)
+        while len(q) > 0:
+            t = q.pop(0)
+            if t == node2:
+                return True
+            for n in graph.get_adjacent_nodes(t):
+                edge = graph.get_edge(t, n)
+                c = Edges.traverse_semi_directed(t, edge)
+                if not c:
+                    continue
+                if c not in v:
+                    v.add(c)
+                    q.append(c)
+        return False
+
+    @classmethod
+    def graph_nodes2text(cls, graph: Graph, title: str, delimiter: str) -> str:
+        fmt = list()
+        if title and len(title):
+            fmt.append("%s\n" % title)
+        nodes = graph.get_nodes()
+        size = len(nodes) if nodes else 0
+        count = 0
+        for node in nodes:
+            count += 1
+            fmt.append(f"%s%s" % (node.get_name(), delimiter if count < size else ""))
+
+        return "".join(fmt)
+
+    @classmethod
+    def graph_edges2text(cls, graph: Graph, title: str) -> str:
+        fmt = list()
+        if title and len(title):
+            fmt.append("%s\n" % title)
+        edges = list(graph.get_graph_edges())
+        # Edges.sortEdges(edges)
+        size = len(edges)
+        count = 0
+        for edge in edges:
+            count += 1
+            # We will print edge's properties in the edge (via toString() function) level.
+            # List<Edge.Property> properties = edge.getProperties();
+            if count < size:
+                fmt.append("%d. %s\n" % (count, edge))
+            else:
+                fmt.append("%d. %s" % (count, edge))
+        return "".join(fmt)
+
+    @classmethod
+    def graph_attributes2text(cls, graph: Graph, title: str) -> str:
+        attributes = graph.get_all_attributes()
+        if attributes and len(attributes) > 0:
+            fmt = list()
+            if title and len(title):
+                fmt.append("%s\n" % title)
+            for key in attributes:
+                value = attributes[key]
+                fmt.append("%s: %s\n" % (key, value))
+            return "".join(fmt)
+        return ""
+
+    @classmethod
+    def graph_node_attributes2text(cls, graph: Graph, title: str, delimiter: str) -> str:
+        nodes = graph.get_nodes()
+        graph_node_attributes = Dict[str, Dict[str, object]]()
+        for node in nodes:
+            attributes = node.get_all_attributes()
+            if attributes and len(attributes) > 0:
+                for key in attributes:
+                    value = attributes[key]
+                    if key in graph_node_attributes:
+                        node_attributes = graph_node_attributes.get(key)
+                    else:
+                        node_attributes = {}
+                    node_attributes[node.get_name()] = value
+                    graph_node_attributes[key] = node_attributes
+
+        if len(graph_node_attributes) > 0:
+            fmt = list()
+            if title and len(title) > 0:
+                fmt.append("%s" % title)
+            for key in graph_node_attributes:
+                node_attributes = graph_node_attributes[key]
+                size = len(node_attributes)
+                count = 0
+                fmt.append("\n%s: [" % key)
+                for node_name in node_attributes:
+                    count += 1
+                    value = node_attributes[node_name]
+                    fmt.append("%s: %s%s" % (node_name, value, delimiter if count < size else ""))
+                fmt.append("]")
+            return "".join(fmt)
+        return ""
+
+    @classmethod
+    def triples2text(cls, triples: Set[Triple], title: str) -> str:
+        fmt = list()
+        if title and len(title) > 0:
+            fmt.append("%s\n" % title)
+        size = len(triples) if triples else 0
+        if size > 0:
+            count = 0
+            for triple in triples:
+                count += 1
+                fmt.append("%s\n" % triple if count < size else "%s" % triple)
+
+        return "".join(fmt)
+
+    @classmethod
+    def graph2text(cls, graph: Graph):
+        # add edge properties relating to edge coloring of PAGs
+        if graph.is_pag():
+            cls.add_pag_coloring(graph)
+        fmt = list()
+        fmt.append("%s\n\n" % cls.graph_nodes2text(graph, "Graph Nodes:", ";"))
+        fmt.append("%s\n" % cls.graph_edges2text(graph, "Graph Edges:"))
+
+        # Graph Attributes
+        graph_attributes = cls.graph_attributes2text(graph, "Graph Attributes:")
+        if graph_attributes:
+            fmt.append("%s\n" % graph_attributes)
+
+        # Nodes Attributes
+        graph_node_attributes = cls.graph_node_attributes2text(graph, "Graph Node Attributes:", ";")
+        if graph_node_attributes:
+            fmt.append("%s\n" % graph_node_attributes)
+
+        ambiguous_triples = graph.get_ambiguous_triples()
+        if not ambiguous_triples and len(ambiguous_triples) > 0:
+            fmt.append("\n\n%s" % cls.triples2text(ambiguous_triples,
+                                                   "Ambiguous triples (i.e. list of triples for which there is "
+                                                   "ambiguous data about whether they are colliders or not):"))
+
+        underline_triples = graph.get_underlines()
+        if not underline_triples and len(underline_triples) > 0:
+            fmt.append("\n\n%s" % cls.triples2text(underline_triples, "Underline triples:"))
+
+        dotted_underline_triples = graph.get_dotted_underlines()
+        if not dotted_underline_triples and len(dotted_underline_triples) > 0:
+            fmt.append("\n\n%s" % cls.triples2text(dotted_underline_triples, "Dotted underline triples:"))
+
+        return "".join(fmt)

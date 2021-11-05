@@ -441,15 +441,15 @@ class Graph:
         raise NotImplementedError
 
     # Sets the list of ambiguous triples to the triples in the given set.
-    def set_ambiguous_triples(self, triples: Set):
+    def set_ambiguous_triples(self, triples: Set[Triple]):
         raise NotImplementedError
 
     # Sets the list of underlined triples to the triples in the given set.
-    def set_underline_triples(self, triples: Set):
+    def set_underline_triples(self, triples: Set[Triple]):
         raise NotImplementedError
 
     # Sets the list of dotted underlined triples to the triples in the given set.
-    def set_dotted_underline_triples(self, triples: Set):
+    def set_dotted_underline_triples(self, triples: Set[Triple]):
         raise NotImplementedError
 
     # Returns a tier ordering for acyclic graphs.

@@ -55,6 +55,43 @@ class EdgeListGraph(Graph):
                     raise ValueError
                 self.names_hash[node.get_name()] = node
 
+    def _collect_ancestors_visit(self, node: Node, ancestors: Set[Node]):
+        if node in ancestors:
+            return
+        ancestors.add(node)
+        parents = self.get_parents(node)
+        if parents and len(parents) > 0:
+            for parent in parents:
+                self._collect_ancestors_visit(parent, ancestors)
+
+    def _collect_descendants_visit(self, node: Node, descendants: Set[Node]):
+        descendants.add(node)
+        children = self.get_children(node)
+        if children and len(children) > 0:
+            for child in children:
+                self._do_child_closure_visit(child, descendants)
+
+    def _do_child_closure_visit(self, node: Node, closure: Set[Node]):
+        """ closure under the child relation
+
+        """
+        if node not in closure:
+            closure.add(node)
+            for edge in self.get_node_edges(node):
+                sub = Edges.traverse_directed(node, edge)
+                if not sub:
+                    continue
+                self._do_child_closure_visit(sub, closure)
+
+    def _possible_ancestor_set(self, node1: Node, nodes2: List[Node]) -> bool:
+        """ return true iff node1 is a possible ancestor of at least one member of nodes2
+
+        """
+        for n in nodes2:
+            if self.possible_ancestor(node1, n):
+                return True
+        return False
+
     def add_bidirected_edge(self, node1: Node, node2: Node) -> bool:
         """
         Adds a bidirected edge to the graph from node A to node B.
@@ -99,6 +136,7 @@ class EdgeListGraph(Graph):
         if Edges.is_directed_edge(edge):
             node = Edges.get_directed_edge_tail(edge)
             if node.get_node_type() == NodeType.ERROR:
+                # 触发属性修改监听
                 pass
         self.ancestors = None
         return True
@@ -122,6 +160,7 @@ class EdgeListGraph(Graph):
         self.nodes.append(node)
         self.names_hash[node.get_name()] = node
         if node.get_node_type() == NodeType.ERROR:
+            # 触发属性修改监听
             pass
         return True
 
@@ -148,20 +187,20 @@ class EdgeListGraph(Graph):
         """
         Return true if there is a directed path from node1 to node2.
         """
-        Q = List[Node]()
-        V = Set[Node]()
-        Q.append(node1)
-        V.add(node1)
+        q = List[Node]()
+        v = Set[Node]()
+        q.append(node1)
+        v.add(node1)
         started = False
-        while len(Q) > 0:
-            t = Q.pop(0)
+        while len(q) > 0:
+            t = q.pop(0)
             if started and t == node2:
                 return True
             started = True
             for c in self.get_children(t):
-                if c not in V:
-                    V.add(c)
-                    Q.append(c)
+                if c not in v:
+                    v.add(c)
+                    q.append(c)
 
     def exists_undirected_path_from_to(self, node1: Node, node2: Node) -> bool:
         return self.exists_undirected_path_visit(node1, node2, Set[Node]())
@@ -221,7 +260,20 @@ class EdgeListGraph(Graph):
         return False
 
     def __eq__(self, other):
-        pass
+        if not other:
+            return False
+        if isinstance(other, EdgeListGraph):
+            nodes_equal = len(set(self.nodes) ^ set(other.nodes)) == 0
+            edges_equal = len(set(self.edges_set) ^ set(other.edges_set)) == 0
+            return nodes_equal and edges_equal
+        if isinstance(other, Graph):
+            nodes_equal = len(set(self.get_node_names()) ^ set(other.get_node_names())) == 0
+            edges_equal = len(set(self.get_graph_edges()) ^ set(other.get_graph_edges())) == 0
+            return nodes_equal and edges_equal
+        return False
+
+    def __str__(self):
+        GraphUtils.graph2text(self)
 
     def fully_connect(self, endpoint: Endpoint):
         """
@@ -262,25 +314,67 @@ class EdgeListGraph(Graph):
         return adj
 
     def get_ancestors(self, nodes: List[Node]) -> List[Node]:
-        pass
+        ancestors = Set[Node]()
+        for node in nodes:
+            self._collect_ancestors_visit(node, ancestors)
+        return list(ancestors)
 
     def get_children(self, node: Node) -> List[Node]:
-        pass
+        children = List[Node]()
+        for edge in self.get_node_edges(node):
+            if Edges.is_directed_edge(edge):
+                sub = Edges.traverse_directed(node, edge)
+                if sub:
+                    children.append(sub)
+        return children
 
     def get_connectivity(self) -> int:
-        pass
+        connectivity = 0
+        nodes = self.get_nodes()
+        for node in nodes:
+            n = self.get_node_edges(node)
+            if n > connectivity:
+                connectivity = n
+        return connectivity
 
     def get_descendants(self, nodes: List[Node]) -> List[Node]:
-        pass
+        descendants = Set[Node]()
+        for node in nodes:
+            self._collect_descendants_visit(node, descendants)
+        return list(descendants)
 
     def get_edge(self, node1: Node, node2: Node) -> Edge:
-        pass
+        """ return the edge connecting node1 and node2, provided a unique such edge
+
+        """
+        edges = self.edge_lists.get(node1)
+        if not edges or len(edges) == 0:
+            return None
+        for edge in edges:
+            if edge.get_node1() == node1 and edge.get_node2() == node2:
+                return edge
+            elif edge.get_node1() == node2 and edge.get_node2() == node1:
+                return edge
+        return None
 
     def get_directed_edge(self, node1: Node, node2: Node) -> Edge:
-        pass
+        edges = self.get_connecting_edges(node1, node2)
+        if not edges or len(edges) == 0:
+            return None
+        for edge in edges:
+            if Edges.is_directed_edge(edge) and edge.get_proximal_endpoint(node2) == Endpoint.ARROW:
+                return edge
+        return None
 
     def get_node_edges(self, node: Node) -> List[Edge]:
-        pass
+        """ the list of edges connected to a particular node.
+        No particular ordering of the edges in the list is guaranteed.
+
+        """
+        edges = self.edge_lists.get(node)
+        if not edges:
+            return List[Edge]()
+        return list(edges)
 
     def get_connecting_edges(self, node1: Node, node2: Node) -> List[Edge]:
         """
@@ -449,8 +543,51 @@ class EdgeListGraph(Graph):
     def is_d_separated_from(self, node1: Node, node2: Node, z: List[Node]) -> bool:
         return not self.is_d_connected_to(node1, node2, z)
 
-    def poss_d_connected_to(self, node1: Node, node2: Node, z: List[Node]) -> bool:
-        pass
+    def poss_d_connected_to(self, node1: Node, node2: Node, cond_nodes: List[Node]) -> bool:
+        all_nodes = list(self.get_nodes())
+        sz = len(all_nodes)
+        edge_stage = [[0] * sz] * sz
+        stage = 1
+        n1x = all_nodes.index(node1)
+        n2x = all_nodes.index(node2)
+        edge_stage[n1x][n1x] = 1
+        edge_stage[n2x][n2x] = 1
+
+        next_edges = []
+        temp1 = [n1x, n1x]
+        next_edges.append(temp1)
+        temp2 = [n2x, n2x]
+        next_edges.append(temp2)
+        while True:
+            curr_edges = next_edges
+            next_edges = []
+            for edge in curr_edges:
+                center = all_nodes[edge[1]]
+                adj = list(self.get_adjacent_nodes(center))
+                for a in adj:
+                    # check if we've hit this edge before
+                    test_index = all_nodes.index(a)
+                    if edge_stage[edge[1]][test_index] != 0:
+                        continue
+
+                    # if the edge pair violates possible d-connection, then go to the next adjacent node.
+                    x = all_nodes[edge[0]]
+                    y = all_nodes[edge[1]]
+                    z = all_nodes[test_index]
+                    if not ((self.is_def_noncollider(x, y, z) and y not in cond_nodes) or
+                            (self.is_def_collider(x, y, z) and self._possible_ancestor_set(y, cond_nodes))):
+                        continue
+
+                    # if it gets here, then it's legal, so:
+                    # (i) if this is the one we want, we're done
+                    if a == node2:
+                        return True
+                    # (ii) if we need to keep going, add the edge to the nextEdges list
+                    next_edge = [edge[1], test_index]
+                    next_edges.append(next_edge)
+                    # (iii) set the edgeStage array
+                    edge_stage[edge[1]][test_index] = stage
+                    edge_stage[test_index][edge[1]] = stage
 
     def is_pattern(self) -> bool:
         return self.pattern
@@ -534,10 +671,26 @@ class EdgeListGraph(Graph):
         return self.get_in_degree(node) == 0
 
     def get_nodes_into(self, node: Node, endpoint: Endpoint) -> List[Node]:
-        pass
+        """ Nodes adjacent to the given node with the given proximal endpoint.
+
+        """
+        nodes = List[Node]()
+        edges = self.get_node_edges(node)
+        for edge in edges:
+            if edge.get_proximal_endpoint(node) == endpoint:
+                nodes.append(edge.get_distal_node(node))
+        return nodes
 
     def get_nodes_out_of(self, node: Node, endpoint: Endpoint) -> List[Node]:
-        pass
+        """ Nodes adjacent to the given node with the given distal endpoint.
+
+        """
+        nodes = List[Node]()
+        edges = self.get_node_edges(node)
+        for edge in edges:
+            if edge.get_distal_endpoint(node) == endpoint:
+                nodes.append(edge.get_distal_node(node))
+        return nodes
 
     def remove_edge(self, edge: Edge) -> bool:
         """
@@ -564,7 +717,7 @@ class EdgeListGraph(Graph):
         self.highlighted_edges.remove(edge)
         self.stuff_removed_since_last_triple_access = True
         self.ancestors = None
-        self.get_pcs().firePropertyChange("edgeRemoved", edge, None)
+        # self.get_pcs().firePropertyChange("edgeRemoved", edge, None)
         return True
 
     def remove_connecting_edge(self, node1: Node, node2: Node) -> bool:
@@ -577,7 +730,7 @@ class EdgeListGraph(Graph):
         return self.remove_edges(edges)
 
     def remove_connecting_edges(self, node1: Node, node2: Node) -> bool:
-        pass
+        return self.remove_edges(self.get_connecting_edges(node1, node2))
 
     def remove_edges(self, edges: List[Edge]) -> bool:
         change = False
@@ -587,16 +740,38 @@ class EdgeListGraph(Graph):
         return change
 
     def remove_node(self, node: Node) -> bool:
-        pass
+        """ Removes a node from the graph.
+
+        """
 
     def remove_nodes(self, nodes: List[Node]) -> bool:
-        pass
+        changed = False
+        for node in nodes:
+            _changed = self.remove_node(node)
+            changed |= _changed
+        return changed
 
     def set_endpoint(self, node1: Node, node2: Node, endpoint: Endpoint) -> bool:
-        pass
+        """ If there is currently an edge from node1 to node2,
+        sets the endpoint at node2 to the given endpoint; if there is no such edge, adds an edge --#
+        where # is the given endpoint. Setting an endpoint to null,
+        provided there is exactly one edge connecting the given nodes, removes the edge.
+        (If there is more than one edge, an exception is thrown.)
+        """
+        edge = self.get_edge(node1, node2)
+        self.ancestors = None
+        self.remove_edge(edge)
+        new_edge = Edge(node1, node2, edge.get_proximal_endpoint(node1), endpoint)
+        self.add_edge(new_edge)
+        return True
 
     def subgraph(self, nodes: List[Node]):
-        pass
+        graph = EdgeListGraph(nodes=nodes)
+        edges = self.get_graph_edges()
+        for edge in edges:
+            if edge.get_node1() in nodes and edge.get_node2() in nodes:
+                graph.add_edge(edge)
+        return graph
 
     def transfer_nodes_and_edges(self, graph):
         if not graph:
@@ -616,61 +791,77 @@ class EdgeListGraph(Graph):
         self.attributes = {**graph.get_all_attributes()}
 
     def get_ambiguous_triples(self) -> Set[Triple]:
-        pass
+        return set(self.ambiguous_triples)
 
     def get_underlines(self) -> Set[Triple]:
-        pass
+        return set(self.underline_triples)
 
     def get_dotted_underlines(self) -> Set[Triple]:
-        pass
+        return set(self.dotted_underline_triples)
 
     def is_ambiguous_triple(self, node1: Node, node2: Node, node3: Node) -> bool:
-        pass
+        return Triple(node1, node2, node3) in self.ambiguous_triples
 
     def is_underline_triple(self, node1: Node, node2: Node, node3: Node) -> bool:
-        pass
+        return Triple(node1, node2, node3) in self.underline_triples
 
     def is_dotted_underline_triple(self, node1: Node, node2: Node, node3: Node) -> bool:
-        pass
+        return Triple(node1, node2, node3) in self.dotted_underline_triples
 
     def add_ambiguous_triple(self, node1: Node, node2: Node, node3: Node):
-        pass
+        self.ambiguous_triples.add(Triple(node1, node2, node3))
 
     def add_underline_triple(self, node1: Node, node2: Node, node3: Node):
-        pass
+        triple = Triple(node1, node2, node3)
+        if triple.along_path_in(self):
+            self.underline_triples.add(triple)
 
     def add_dotted_underline_triple(self, node1: Node, node2: Node, node3: Node):
-        pass
+        triple = Triple(node1, node2, node3)
+        if triple.along_path_in(self):
+            self.underline_triples.add(triple)
 
     def remove_ambiguous_triple(self, node1: Node, node2: Node, node3: Node):
-        pass
+        triple = Triple(node1, node2, node3)
+        if triple in self.ambiguous_triples:
+            self.ambiguous_triples.remove(triple)
 
     def remove_underline_triple(self, node1: Node, node2: Node, node3: Node):
-        pass
+        triple = Triple(node1, node2, node3)
+        if triple in self.underline_triples:
+            self.underline_triples.remove(triple)
 
     def remove_dotted_underline_triple(self, node1: Node, node2: Node, node3: Node):
-        pass
+        triple = Triple(node1, node2, node3)
+        if triple in self.dotted_underline_triples:
+            self.dotted_underline_triples.remove(triple)
 
-    def set_ambiguous_triples(self, triples: Set):
-        pass
+    def set_ambiguous_triples(self, triples: Set[Triple]):
+        self.ambiguous_triples.clear()
+        for t in triples:
+            self.add_ambiguous_triple(t.get_x(), t.get_y(), t.get_z())
 
-    def set_underline_triples(self, triples: Set):
-        pass
+    def set_underline_triples(self, triples: Set[Triple]):
+        self.underline_triples.clear()
+        for t in triples:
+            self.add_underline_triple(t.get_x(), t.get_y(), t.get_z())
 
-    def set_dotted_underline_triples(self, triples: Set):
-        pass
+    def set_dotted_underline_triples(self, triples: Set[Triple]):
+        self.dotted_underline_triples.clear()
+        for t in triples:
+            self.add_dotted_underline_triple(t.get_x(), t.get_y(), t.get_z())
 
     def get_causal_ordering(self) -> List[Node]:
-        pass
+        return GraphUtils.get_causal_ordering(self)
 
     def set_high_lighted(self, edge: Edge, highlighted: bool):
-        pass
+        self.highlighted_edges.add(edge)
 
     def is_high_lighted(self, edge: Edge) -> bool:
-        pass
+        return self.highlighted_edges and edge in self.highlighted_edges
 
     def is_parameterizable(self, node: Node) -> bool:
-        pass
+        return True
 
     def is_time_lag_model(self) -> bool:
         return False
@@ -679,22 +870,49 @@ class EdgeListGraph(Graph):
         return None
 
     def remove_triples_not_in_graph(self):
-        pass
+        for t in self.ambiguous_triples:
+            if not self.contains_node(t.get_x()) or not self.contains_node(t.get_y()) or not self.contains_node(
+                    t.get_z()):
+                self.ambiguous_triples.remove(t)
+                continue
+            if not self.is_adjacent_to(t.get_x(), t.get_y()) or not self.is_adjacent_to(t.get_y(), t.get_z()):
+                self.ambiguous_triples.remove(t)
+
+        for t in self.underline_triples:
+            if not self.contains_node(t.get_x()) or not self.contains_node(t.get_y()) or not self.contains_node(
+                    t.get_z()):
+                self.underline_triples.remove(t)
+                continue
+            if not self.is_adjacent_to(t.get_x(), t.get_y()) or not self.is_adjacent_to(t.get_y(), t.get_z()):
+                self.underline_triples.remove(t)
+
+        for t in self.dotted_underline_triples:
+            if not self.contains_node(t.get_x()) or not self.contains_node(t.get_y()) or not self.contains_node(
+                    t.get_z()):
+                self.dotted_underline_triples.remove(t)
+                continue
+            if not self.is_adjacent_to(t.get_x(), t.get_y()) or not self.is_adjacent_to(t.get_y(), t.get_z()):
+                self.dotted_underline_triples.remove(t)
+        self.stuff_removed_since_last_triple_access = False
 
     def get_sepset(self, node1: Node, node2: Node) -> List[Node]:
-        pass
+        return GraphUtils.get_sepset(node1, node2, self)
 
     def set_nodes(self, nodes: List[Node]):
-        pass
+        if len(nodes) != len(self.nodes):
+            raise ValueError("Sorry, there is a mismatch in the number of variables you are trying to set.")
+        self.nodes.clear()
+        self.nodes.extend(nodes)
 
     def get_all_attributes(self) -> Dict[str, object]:
-        pass
+        return self.attributes
 
     def get_attribute(self, key: str) -> object:
-        pass
+        return self.attributes.get(key, Node)
 
     def remove_attribute(self, key: str):
-        pass
+        if key in self.attributes:
+            del self.attributes[key]
 
     def add_attribute(self, key: str, value: object):
-        pass
+        self.attributes[key] = value
