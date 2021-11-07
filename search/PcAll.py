@@ -61,7 +61,7 @@ class PcAll(GraphSearch):
         self.graph = None
         self.ambiguous_triples = None
         self.collider_triples = None
-        self.noncollider_triples = None
+        self.non_collider_triples = None
         self.sepsets = None
 
     def get_elapsed_time(self) -> int:
@@ -75,7 +75,7 @@ class PcAll(GraphSearch):
         self.logger.info(f"Independence test = {self.get_independence_test()}.")
         self.ambiguous_triples = Set[Triple]()
         self.collider_triples = Set[Triple]()
-        self.noncollider_triples = Set[Triple]()
+        self.non_collider_triples = Set[Triple]()
         self.independence_test.set_verbose(self.verbose)
         start_time = time.time_ns()
 
@@ -140,7 +140,7 @@ class PcAll(GraphSearch):
     def orient_unshielded_triples_conservative(self, knowledge: Knowledge):
         self.logger.info("Starting Collider Orientation:")
         self.collider_triples = Set[Triple]()
-        self.noncollider_triples = Set[Triple]()
+        self.non_collider_triples = Set[Triple]()
         self.ambiguous_triples = Set[Triple]()
         nodes = self.graph.get_nodes()
         for y in nodes:
@@ -160,7 +160,7 @@ class PcAll(GraphSearch):
                         PcAll._orient_collider(x, y, z, self.conflict_rule, self.graph)
                     self.collider_triples.add(Triple(x, y, z))
                 elif self._is_non_collider_sepset(y, sepsetsxz):
-                    self.noncollider_triples.add(Triple(x, y, z))
+                    self.non_collider_triples.add(Triple(x, y, z))
                 else:
                     triple = Triple(x, y, z)
                     self.ambiguous_triples.add(triple)
@@ -261,7 +261,7 @@ class PcAll(GraphSearch):
             self.logger.info(f"Collider: {str(t)}")
 
         self.logger.info("\nNon-collider triples:")
-        for t in self.noncollider_triples:
+        for t in self.non_collider_triples:
             self.logger.info(f"Non-collider: {str(t)}")
 
         self.logger.info("\nAmbiguous triples (i.e. list of triples for which " +

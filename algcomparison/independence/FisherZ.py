@@ -2,7 +2,7 @@ from typing import List
 
 from data.DataModel import DataModel
 from data.DataType import DataType
-from util.Parameters import Parameters
+from search.IndependenceTest import IndependenceTest
 from .IndependenceWrapper import IndependenceWrapper
 
 
@@ -20,7 +20,7 @@ class FisherZ(IndependenceWrapper):
     def get_data_type(self) -> DataType:
         return DataType.Continuous
 
-    def get_test(self, dataset: DataModel, **parameters):
+    def get_test(self, dataset: DataModel, **parameters) -> IndependenceTest:
         alpha = parameters.get("alpha", 0)
         if isinstance(dataset, CovarianceMatrix):
             return IndTestFisherZ(dataset, alpha)
