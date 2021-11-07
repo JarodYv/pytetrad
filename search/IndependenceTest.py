@@ -46,7 +46,7 @@ class IndependenceTest:
 
     def get_variables(self) -> List[Node]:
         """ The list of variables over which this independence checker is capable of
-        determinining independence relations.
+        determining independence relations.
 
         :return:
         """

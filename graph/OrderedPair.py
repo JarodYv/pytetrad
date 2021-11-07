@@ -14,7 +14,7 @@ class OrderedPair(Generic[T]):
         if not second:
             raise ValueError("2nd node must not be null.")
 
-        self.first = first  # The "First" node.
+        self.first = first  # The "first" node.
         self.second = second  # The "second" node.
 
     def get_first(self) -> T:
