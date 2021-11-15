@@ -66,7 +66,6 @@ class Node:
         """
         raise NotImplementedError
 
-    # @return the y coordinate of the center of the node
     def get_center_y(self) -> int:
         """ Get the y coordinate of the center of the node
 

@@ -1,5 +1,4 @@
 from graph.Node import Node
-from typing import List
 from graph import Graph
 
 
@@ -35,6 +34,7 @@ class Triple:
     def __eq__(self, other):
         if not other or not isinstance(other, Triple):
             return False
+        # Note that (x, y, z) = (z, y, x).
         return self.x == other.x and self.y == other.y and self.z == other.z or self.x == other.z and self.y == other.y and self.z == other.x
 
     def __str__(self):
@@ -46,5 +46,4 @@ class Triple:
     @classmethod
     def path_string(cls, graph: Graph, x: Node, y: Node, z: Node):
         from graph.GraphUtils import GraphUtils
-        path: List[Node] = [x, y, z]
-        return GraphUtils.path_string(path, graph)
+        return GraphUtils.path_string([x, y, z], graph)

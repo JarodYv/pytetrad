@@ -142,7 +142,7 @@ class Edges:
 
     @classmethod
     def pointing_left(cls, endpoint1: Endpoint, endpoint2: Endpoint) -> bool:
-        """ Is the edge points from right to left?
+        """ Is the edge points from right to left? There are 2 cases: <-- and <-o
 
         :param endpoint1:
         :param endpoint2:

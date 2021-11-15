@@ -175,16 +175,18 @@ class Edge:
         :return:
         """
         proximal = self.get_proximal_endpoint(node)
+        if not proximal:
+            return False
         distal = self.get_distal_endpoint(node)
+        if not distal:
+            return False
         return proximal == Endpoint.ARROW and (distal == Endpoint.TAIL or distal == Endpoint.CIRCLE)
 
     def __eq__(self, other):
-        if not other:
+        if not other or not isinstance(other, Edge):
             return False
         if self == other:
             return True
-        if not isinstance(other, Edge):
-            return False
         if NodeEqualityMode.get_equality_type() == NodeEqualityMode.NodeEqualityType.OBJECT:
             if self.node1 == other.node1 and self.node2 == other.node2:
                 equal = self.endpoint1 == other.endpoint1 and self.endpoint2 == other.endpoint2

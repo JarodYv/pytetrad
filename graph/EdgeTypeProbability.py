@@ -6,13 +6,13 @@ from graph.EdgeProperty import EdgeProperty
 class EdgeTypeProbability:
     class EdgeType(Enum):
         nil = 1
-        ta = 2
-        at = 3
-        ca = 4
-        ac = 5
-        cc = 6
-        aa = 7
-        tt = 8
+        ta = 2  # tail - arrow
+        at = 3  # arrow - tail
+        ca = 4  # circle - arrow
+        ac = 5  # arrow - circle
+        cc = 6  # circle - circle
+        aa = 7  # arrow - arrow
+        tt = 8  # tail - tail
 
     def __init__(self, edge_type: EdgeType, properties: List[EdgeProperty], probability: float):
         self.edge_type = edge_type

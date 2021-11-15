@@ -67,7 +67,7 @@ class KnowledgeGroup:
         if not type(other) == type(self):
             return False
         return self.k_type == other.k_type and compare_set(self.k_from, other.k_from) and compare_set(
-            self.k_to == other.k_to)
+            self.k_to, other.k_to)
 
     def is_conflict(self, group):
         if not group:

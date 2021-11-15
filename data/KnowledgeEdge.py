@@ -1,7 +1,7 @@
 class KnowledgeEdge:
     def __init__(self, from_node: str, to_node: str):
         if not from_node or not to_node:
-            raise ValueError("from or to is none")
+            raise ValueError("from node or to node is none")
         self.from_node = from_node
         self.to_node = to_node
 
@@ -15,9 +15,7 @@ class KnowledgeEdge:
         return f"{self.from_node} --> {self.to_node}"
 
     def __eq__(self, other):
-        if not other:
-            return False
-        if not type(other) == type(self):
+        if not other or not isinstance(other, KnowledgeEdge):
             return False
         return self.to_node == other.to_node and self.from_node == other.from_node
 
