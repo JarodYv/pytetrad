@@ -7,6 +7,7 @@ from search.IndependenceTest import IndependenceTest
 from search.ConflictRule import ConflictRule
 from search.GraphSearch import GraphSearch
 from search.MeekRules import MeekRules
+from search.Fas import Fas
 from search.SepsetMap import SepsetMap
 from search.SearchGraphUtils import SearchGraphUtils
 from search.OrientCollidersMaxP import OrientCollidersMaxP

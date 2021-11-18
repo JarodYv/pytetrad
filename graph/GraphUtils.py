@@ -62,7 +62,7 @@ class GraphUtils:
         reference = EdgeListGraph(nodes=new_variables)
         converted_graph = EdgeListGraph(nodes=new_variables)
         if not original_graph:
-            return None
+            return original_graph
         for edge in original_graph.get_graph_edges():
             node1 = reference.get_node(edge.get_node1().get_name())
             node2 = reference.get_node(edge.get_node2().get_name())

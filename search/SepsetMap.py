@@ -53,5 +53,3 @@ class SepsetMap:
     def get_p_value(self, x: Node, y: Node) -> float:
         pair = [x, y]
         return self.p_values.get(pair, 0)
-
-

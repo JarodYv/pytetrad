@@ -26,8 +26,8 @@ class Knowledge2(Knowledge):
     The '*' wildcard matches any string of consecutive characters up until the
     following character is encountered. Thus, "X*a" will match "X123a" and "X45a".
     """
-    VARNAME_PATTERN = re.compile("[A-Za-z0-9:_\\-\\.]+")
-    SPEC_PATTERN = re.compile("[A-Za-z0-9:-_,\\-\\.*]+")
+    VARNAME_PATTERN = re.compile("[A-Za-z0-9:_\-\.]+")
+    SPEC_PATTERN = re.compile("[A-Za-z0-9:-_,\-\.*]+")
     COMMAN_DELIM = re.compile(",")
 
     def __init__(self, nodes: List[str] = None, knowledge=None):
@@ -152,9 +152,9 @@ class Knowledge2(Knowledge):
         o = self._get_group_rule(group)
         self.knowledge_group_rules[group] = o
 
-        if group.get_type() == FORBIDDEN:
+        if group.get_type() == KnowledgeGroup.FORBIDDEN:
             self.forbidden_rules_specs.append(o)
-        elif group.get_type() == REQUIRED:
+        elif group.get_type() == KnowledgeGroup.REQUIRED:
             self.required_rules_specs.append(o)
 
     def add_variable(self, var_name: str):
@@ -280,9 +280,7 @@ class Knowledge2(Knowledge):
         """
         true if there is no background knowledge recorded.
         """
-        return len(self.forbidden_rules_specs) == 0 \
-               and len(self.required_rules_specs) == 0 \
-               and len(self.tier_specs) == 0
+        return len(self.forbidden_rules_specs) == 0 and len(self.required_rules_specs) == 0 and len(self.tier_specs) == 0
 
     def is_tier_forbidden_within(self, tier: int) -> bool:
         """
@@ -536,7 +534,8 @@ class Knowledge2(Knowledge):
         if not other or not isinstance(other, Knowledge2):
             return False
         return self.forbidden_rules_specs == other.forbidden_rules_specs and \
-               self.required_rules_specs == other.required_rules_specs and self.tier_specs == other.tier_specs
+               self.required_rules_specs == other.required_rules_specs and \
+               self.tier_specs == other.tier_specs
 
     def __hash__(self):
         hash_code = 37
@@ -547,7 +546,7 @@ class Knowledge2(Knowledge):
         return hash_code
 
     def __str__(self):
-        s = "/knowledge\naddtemporal\n"
+        s = "/knowledge\nadd temporal\n"
         for i in range(self.get_num_tiers()):
             forbidden_within = "*" if self.is_tier_forbidden_within(i) else ""
             only_can_cause_next_tier = "-" if self.is_only_can_cause_next_tier(i) else ""
@@ -557,7 +556,7 @@ class Knowledge2(Knowledge):
                 s += " "
                 s += " ".join(tire)
 
-        s += "\n\nforbiddirect"
+        s += "\n\nforbid direct"
         for e in self.forbidden_edges_iterator():
             f = e.get_from()
             t = e.get_to()
@@ -565,7 +564,7 @@ class Knowledge2(Knowledge):
                 continue
             s += f"\n{f} {t}"
 
-        s += "\n\nrequiredirect"
+        s += "\n\nrequire direct"
         for e in self.required_edges_iterator():
             f = e.get_from()
             t = e.get_to()

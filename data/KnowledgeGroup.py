@@ -3,20 +3,20 @@ from util.StringUtils import compare_set
 
 from data.KnowledgeEdge import KnowledgeEdge
 
-REQUIRED = 1
-FORBIDDEN = 2
-
 
 class KnowledgeGroup:
+    REQUIRED = 1
+    FORBIDDEN = 2
+
     def __int__(self, k_type: int):
-        if k_type != REQUIRED and k_type != FORBIDDEN:
+        if k_type != KnowledgeGroup.REQUIRED and k_type != KnowledgeGroup.FORBIDDEN:
             raise ValueError("The given type needs to be either REQUIRED or FORBIDDEN")
         self.k_type = k_type
         self.k_from = Set[str]()
         self.k_to = Set[str]()
 
     def __init__(self, k_type: int, k_from: Set[str], k_to: Set[str]):
-        if k_type != REQUIRED and k_type != FORBIDDEN:
+        if k_type != KnowledgeGroup.REQUIRED and k_type != KnowledgeGroup.FORBIDDEN:
             raise ValueError("The given type needs to be either REQUIRED or FORBIDDEN")
 
         if not k_from:
