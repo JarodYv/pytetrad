@@ -1,0 +1,14 @@
+@startuml
+
+database "dataset" {
+  node "Variables" {
+      () "x1"
+      () "x2"
+      () "x3"
+      () "……"
+    }
+
+    [数据表\n或\n协方差矩阵]
+}
+
+@enduml
