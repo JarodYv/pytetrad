@@ -45,3 +45,26 @@ database "dataset" {
 数据集分为2部分：第一部分是变量集合 $V$，第二部分是这些变量的观测值集合 $X$ 或这些变量的协方差矩阵 $\Sigma$。
 
 数据集在导入数据时创建。
+
+## 图
+
+```plantuml
+@startuml
+
+package "Graph" {
+  node "Variables" {
+      () "x1"
+      () "x2"
+      () "x3"
+      () "……"
+    }
+
+  node "EdgeList" {
+      ()"X1" --> X2
+      ()"X4" <-- X3
+      ()"X5" <--> X6
+  }
+}
+
+@enduml
+```
