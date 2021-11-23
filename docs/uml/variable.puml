@@ -1,0 +1,15 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+!theme amiga
+
+skinparam componentStyle rectangle
+
+node "Variables" {
+  () "x1"
+  () "x2"
+  () "x3"
+  () "……"
+}
+
+@enduml

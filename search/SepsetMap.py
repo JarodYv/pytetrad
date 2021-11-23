@@ -48,7 +48,7 @@ class SepsetMap:
         :return:
         """
         pair = [a, b]
-        return self.sepsets.get(pair, Node)
+        return self.sepsets.get(pair, [])
 
     def get_p_value(self, x: Node, y: Node) -> float:
         pair = [x, y]

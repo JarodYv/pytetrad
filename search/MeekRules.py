@@ -24,7 +24,7 @@ class MeekRules(ImpliedOrientation):
         self.use_rule4 = not self.knowledge.is_empty()
         self.aggressively_prevent_cycles = False
         self.verbose = False
-        self.revert_to_unshielded_colliders = True
+        self.is_revert_to_unshielded_colliders = True
         self.changed_edges = Dict[Edge, Edge]
         self.logger = logging.getLogger("MeekRules")
 
@@ -36,7 +36,7 @@ class MeekRules(ImpliedOrientation):
     def orient_implied(self, graph: Graph) -> Set[Node]:
         visited: Set[Node] = Set[Node]()
         self.logger.info("Starting Orientation Step D.")
-        if self.revert_to_unshielded_colliders:
+        if self.is_revert_to_unshielded_colliders:
             self.revert_to_unshielded_colliders(graph.get_nodes(), graph, visited)
         oriented = True
         while oriented:
@@ -81,7 +81,7 @@ class MeekRules(ImpliedOrientation):
         return did
 
     def set_revert_to_unshielded_colliders(self, revert_to_unshielded_colliders: bool):
-        self.revert_to_unshielded_colliders = revert_to_unshielded_colliders
+        self.is_revert_to_unshielded_colliders = revert_to_unshielded_colliders
 
     def set_verbose(self, verbose: bool):
         self.verbose = verbose

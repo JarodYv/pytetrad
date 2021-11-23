@@ -29,27 +29,49 @@ class Fas(IFas):
     """
 
     def __init__(self, initial_graph: Graph, test: IndependenceTest):
+        # Initial graph.
         if initial_graph:
             self.init_graph = EdgeListGraph(initial_graph)
+
+        # The independence test. This should be appropriate to the types
         self.test = test
-        self.stable = False
-        self.heuristic = 0
-        self.verbose = False
-        self.sepset = SepsetMap()
-        self.numDependenceJudgement = 0
-        self.numIndependenceTests = 0
-        self.depth = 1000
+
+        # Specification of which edges are forbidden or required.
         self.knowledge = Knowledge2()
+
+        # FAS-Stable
+        self.stable = False
+
+        # True iff verbose output should be printed.
+        self.verbose = False
+
+        # The sepsets found during the search.
+        self.sepset = SepsetMap()
+
+        # Which heuristic to use to fix variable order (1, 2, 3, or 0 = none).
+        self.heuristic = 0
+
+        # The number of dependence judgements. Temporary.
+        self.numDependenceJudgement = 0
+
+        # The number of independence tests.
+        self.numIndependenceTests = 0
+
+        # The maximum number of variables conditioned on in any conditional independence test.
+        # If the depth is -1, it will be taken to be the maximum value, which is 1000.
+        # Otherwise, it should be set to a non-negative integer.
+        self.depth = 1000
+
         self.logger = logging.Logger("Fas")
 
-    def is_aggressively_prevent_cycles(self):
+    def is_aggressively_prevent_cycles(self) -> bool:
         return False
 
     def set_aggressively_prevent_cycles(self, v: bool):
         pass
 
     def get_independence_test(self) -> IndependenceTest:
-        return None
+        return self.test
 
     def get_knowledge(self) -> Knowledge:
         return self.knowledge
