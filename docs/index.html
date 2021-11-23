@@ -12,11 +12,19 @@
   <div id="app"></div>
   <script>
     window.$docsify = {
-      name: '',
-      repo: '',
+      name: 'bcoz',
+      repo: 'https://github.com/planplus/bcoz',
+      loadSidebar: true,
+      coverpage: true,
+      loadNavbar: true,
       plantuml: {
         skin: 'default'
       }
+    }
+  </script>
+  <script>
+    if (typeof navigator.serviceWorker !== 'undefined') {
+        navigator.serviceWorker.register('sw.js')
     }
   </script>
   <!-- Docsify v4 -->
