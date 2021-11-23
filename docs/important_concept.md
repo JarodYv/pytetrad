@@ -2,4 +2,15 @@
 
 ## 变量 = 节点 = 顶点
 
-![variables](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/planplus/bcoz/main/docs/uml/variable.puml)
+```plantuml
+@startuml
+
+node "Variables" {
+  () "x1"
+  () "x2"
+  () "x3"
+  () "……"
+}
+
+@enduml
+```
