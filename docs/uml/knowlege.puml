@@ -1,0 +1,21 @@
+@startuml
+
+package "Background Knowledge" {
+  node "Variables" {
+      () "x1"
+      () "x2"
+      () "x3"
+      () "……"
+    }
+
+  node "Required Edge List" {
+      ()"X1" --> X2
+  }
+
+  node "Forbidden Edge List" {
+      ()"X4" <-- X3
+      ()"X5" --> X6
+  }
+}
+
+@enduml
