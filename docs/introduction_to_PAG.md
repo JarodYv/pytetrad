@@ -6,4 +6,4 @@ PAG是一个图对象用于表示一组无法被算法区分的因果贝叶斯�
 
 图2是PAG的一个具体例子。
 
-PAG中存在4种类型的边：$A \rarr B, A \circ\!\!\rarr B, A \circ\!\!-\!\!\circ B, A \leftrightarrow B$
+PAG中存在4种类型的边：$A \rarr B, A {\circ\!\!\rarr} B, A {\circ\!\!-\!\!\circ} B, A \leftrightarrow B$
