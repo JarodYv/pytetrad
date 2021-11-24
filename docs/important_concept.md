@@ -2,18 +2,7 @@
 
 ## 变量 = 节点 = 顶点
 
-```plantuml
-@startuml
-
-node "Variables" {
-  () "x1"
-  () "x2"
-  () "x3"
-  () "……"
-}
-
-@enduml
-```
+![变量](_media/variables_schema.png)
 
 因果推断是个科学发现问题，所以随机变量是最基本的概念。在因果图中，变量以**节点**或**顶点**的形式存在。
 
@@ -26,48 +15,15 @@ node "Variables" {
 
 ## 数据集
 
-```plantuml
-@startuml
+![数据集](_media/dataset_schema.png)
 
-database "dataset" {
-  node "Variables" {
-      () "x1"
-      () "x2"
-      () "x3"
-      () "……"
-    }
-    
-    [数据表\n或\n协方差矩阵]
-}
-
-@enduml
-```
 数据集分为2部分：第一部分是变量集合 $V$，第二部分是这些变量的观测值集合 $X$ 或这些变量的协方差矩阵 $\Sigma$。
 
 数据集在导入数据时创建。
 
 ## 图
 
-```plantuml
-@startuml
-
-package "Graph" {
-  node "Variables" {
-      () "x1"
-      () "x2"
-      () "x3"
-      () "……"
-    }
-
-  node "EdgeList" {
-      ()"X1" --> X2
-      ()"X4" <-- X3
-      ()"X5" <--> X6
-  }
-}
-
-@enduml
-```
+![图](_media/graph_schema.png)
 
 图 $G$ 由节点集合 $V$ 和边集合 $E$ 组成。每条边有4部分信息：一对节点和一对端点。
 例如边 $(A, B, -, >)$ 表示 $A \rarr B$，边 $(B, C, >, >)$ 表示 $B \leftrightarrow C$ 。
@@ -76,29 +32,7 @@ package "Graph" {
 
 ## 背景知识
 
-```plantuml
-@startuml
-
-package "Background Knowledge" {
-  node "Variables" {
-      () "x1"
-      () "x2"
-      () "x3"
-      () "……"
-    }
-
-  node "Required Edge List" {
-      ()"X1" --> X2
-  }
-
-  node "Forbidden Edge List" {
-      ()"X4" <-- X3
-      ()"X5" --> X6
-  }
-}
-
-@enduml
-```
+![背景知识](_media/knowledge_schema.png)
 
 在因果发现算法中，往往需要背景知识（先验知识）作为输入辅助搜索。
 背景知识由一组变量、禁忌边列表和必要边列表组成。
@@ -108,58 +42,7 @@ package "Background Knowledge" {
 
 ## 搜索算法
 
-```plantuml
-@startuml
-
-package "Input" {
-  database "dataset" {
-      node "Variables" {
-          () "x1"
-          () "x2"
-          () "x3"
-          () "……"
-        }
-
-        [数据表\n或\n协方差矩阵]
-    }
-
-  cloud "Background Knowledge" {
-      node "Required Edge List" {
-          ()"X1" --> X2
-      }
-
-      node "Forbidden Edge List" {
-          ()"X4" <-- X3
-          ()"X5" --> X6
-      }
-    }
-
-  [Settings]
-}
-
-package "Graph" {
-  node "_Variables" {
-      () "_x1"
-      () "_x2"
-      () "_x3"
-    }
-
-  node "_EdgeList" {
-      ()"_X1" --> _X2
-      ()"_X4" <-- _X3
-      ()"_X5" <--> _X6
-  }
-}
-
-package "Algorithm" {
-    [Search Algorithm]
-}
-
-dataset --> [Search Algorithm]
-[Search Algorithm] --> _EdgeList
-
-@enduml
-```
+![算法](_media/search_schema.png)
 
 因果发现问题可以简单理解为，首先我们有一组变量，然后在这些变量能组成的 *所有* 图中，找到一个能够正确描述这些变量之间因果关系的图。
 
