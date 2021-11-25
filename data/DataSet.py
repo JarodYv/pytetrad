@@ -8,9 +8,18 @@ from graph.Node import Node
 
 class DataSet(DataModel):
     def __init__(self, data: pd.DataFrame):
+        # The container storing the data. Rows are cases; columns are variables.
+        # The order of columns is coordinated with the order of variables in getVariables().
         self.data = data
+
+        # The list of variables. These correspond column wise to the columns of data.
         self.variables = List[Node]()
+
+        # The name of the data model. This is not used internally;
+        # It is only here in case an external class wants this dataset to have a name.
         self.name = ""
+
+        # The knowledge associated with this data.
         self.knowledge = Knowledge2()
 
     def get_name(self) -> str:
