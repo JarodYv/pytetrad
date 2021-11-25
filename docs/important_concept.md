@@ -110,7 +110,7 @@
 
 **结构方程模型**用于在某种变量间关系假设下拟合连续数据。既可以拟合标准结构方程模型也可以拟合广义结构方程模型。
 
-线性模型意味着变量间的关系可以用线性方程描述。例如，假设我们有图 $\mathot{X \rarr Y \larr Z}$，我们可以将其描述为标准参数化结构方程模型：
+线性模型意味着变量间的关系可以用线性方程描述。例如，假设我们有图 $\mathit{X \rarr Y \larr Z}$，我们可以将其描述为标准参数化结构方程模型：
 
 $\mathit{X = \epsilon_1}$
 
@@ -121,7 +121,7 @@ $\mathit{Y = \alpha X + \beta Y + \epsilon_3}$
 其中$\epsilon_1, \epsilon_2, \epsilon_3$是满足高斯分布的独立随机变量。
 
 结构方程参数化模型包含一个图，外加需要指定概率分布的所有变量的列表。在上面的例子中，参数是
-$\mathit{\alpha, \beta, \mu_\epsilon1, \mu_\epsilon2, \mu_\epsilon3, \sigma_\epsilon1, \sigma_\epsilon2, \sigma_\epsilon3}$。
+$\mathit{\alpha, \beta, \mu_{\epsilon1}, \mu_{\epsilon2}, \mu_{\epsilon3}, \sigma_{\epsilon1}, \sigma_{\epsilon2}, \sigma_{\epsilon3}}$。
 然而在结构方程参数化模型对象中，这些参数的值是待定的；这些值通过实例化模型指定（见实例化模型）。
 
 如果选择**广义**结构方程参数化模型，你可以指定父子变量间的非线性关系，并且每个变量可以是非高斯分布的。
