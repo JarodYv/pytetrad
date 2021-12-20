@@ -116,7 +116,7 @@ $\mathit{X = \epsilon_1}$
 
 $\mathit{Z = \epsilon_2}$
 
-$\mathit{Y = \alpha X + \beta Y + \epsilon_3}$
+$\mathit{Y = \alpha X + \beta Z + \epsilon_3}$
 
 其中$\epsilon_1, \epsilon_2, \epsilon_3$是满足高斯分布的独立随机变量。
 
