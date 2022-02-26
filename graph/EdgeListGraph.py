@@ -22,7 +22,7 @@ class EdgeListGraph(Graph):
     Edges from nodes to themselves may also be added.
     """
 
-    def __init__(self, graph: Graph = None, nodes: List[Node] = None):
+    def __init__(self, graph: Graph | None = None, nodes: List[Node] | None = None):
         self.edge_lists = Dict[Node, List[Edge]]()
         self.nodes = List[Node]()
         self.edges_set = Set[Node]()
@@ -343,7 +343,7 @@ class EdgeListGraph(Graph):
             self._collect_descendants_visit(node, descendants)
         return list(descendants)
 
-    def get_edge(self, node1: Node, node2: Node) -> Edge:
+    def get_edge(self, node1: Node, node2: Node) -> Edge | None:
         """ return the edge connecting node1 and node2, provided a unique such edge
 
         """
@@ -357,7 +357,7 @@ class EdgeListGraph(Graph):
                 return edge
         return None
 
-    def get_directed_edge(self, node1: Node, node2: Node) -> Edge:
+    def get_directed_edge(self, node1: Node, node2: Node) -> Edge | None:
         edges = self.get_connecting_edges(node1, node2)
         if not edges or len(edges) == 0:
             return None
@@ -392,7 +392,7 @@ class EdgeListGraph(Graph):
     def get_graph_edges(self) -> Set[Edge]:
         return Set[Edge](self.edges_set)
 
-    def get_endpoint(self, node1: Node, node2: Node) -> Endpoint:
+    def get_endpoint(self, node1: Node, node2: Node) -> Endpoint | None:
         """
         return the endpoint along the edge from node to node2 at the node2 end.
         """
@@ -501,7 +501,7 @@ class EdgeListGraph(Graph):
         return node1 != node2 and self.is_ancestor_of(node1, node2)
 
     def is_proper_descendent_of(self, node1: Node, node2: Node) -> bool:
-        return node1 != node2 and self.is_descendent_of(node1, node2);
+        return node1 != node2 and self.is_descendent_of(node1, node2)
 
     def is_descendent_of(self, node1: Node, node2: Node) -> bool:
         """

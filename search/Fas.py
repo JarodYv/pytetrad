@@ -95,7 +95,7 @@ class Fas(IFas):
     def search(self) -> Graph:
         pass
 
-    def search_with_node(self, nodes: List[Node]) -> Graph:
+    def search_with_node(self, nodes: List[Node]) -> Graph | None:
         return None
 
     def get_elapsed_time(self) -> int:
@@ -110,7 +110,7 @@ class Fas(IFas):
     def get_nodes(self) -> List[Node]:
         return self.test.get_variables()
 
-    def get_ambiguous_triples(self, node: Node) -> List[Triple]:
+    def get_ambiguous_triples(self, node: Node) -> List[Triple] | None:
         return None
 
     def is_verbose(self) -> bool:

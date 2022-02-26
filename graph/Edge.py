@@ -125,7 +125,7 @@ class Edge:
     def get_edge_type_probabilities(self) -> List[EdgeTypeProbability]:
         return self.edge_type_probabilities
 
-    def get_proximal_endpoint(self, node: Node) -> Endpoint:
+    def get_proximal_endpoint(self, node: Node) -> Endpoint | None:
         """ return the endpoint nearest to the given node;
         if the given node is not along the edge, returns NoneType
 
@@ -137,7 +137,7 @@ class Edge:
         else:
             return None
 
-    def get_distal_endpoint(self, node: Node) -> Endpoint:
+    def get_distal_endpoint(self, node: Node) -> Endpoint | None:
         """ return the endpoint furthest from the given node;
         if the given node is not along the edge, returns NoneType
 
@@ -149,7 +149,7 @@ class Edge:
         else:
             return None
 
-    def get_distal_node(self, node: Node) -> Node:
+    def get_distal_node(self, node: Node) -> Node | None:
         """ traverses the edge in an undirected fashion:
         given one node along the edge, returns the node at the opposite end of the edge
 
@@ -272,4 +272,4 @@ class Edge:
         :return: returns True if the edge is pointing "left"
         """
         return self.endpoint1 == Endpoint.ARROW and (
-                    self.endpoint2 == Endpoint.TAIL or self.endpoint2 == Endpoint.CIRCLE)
+                self.endpoint2 == Endpoint.TAIL or self.endpoint2 == Endpoint.CIRCLE)

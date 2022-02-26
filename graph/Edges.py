@@ -62,7 +62,7 @@ class Edges:
         return edge.get_endpoint1() == Endpoint.TAIL and edge.get_endpoint2() == Endpoint.TAIL
 
     @classmethod
-    def traverse(cls, node: Node, edge: Edge) -> Node:
+    def traverse(cls, node: Node, edge: Edge) -> Node | None:
         """ Return the node opposite the given node along the given edge.
 
         :param node:
@@ -78,7 +78,7 @@ class Edges:
         return None
 
     @classmethod
-    def traverse_directed(cls, node: Node, edge: Edge) -> Node:
+    def traverse_directed(cls, node: Node, edge: Edge) -> Node | None:
         """
         For A -> B, given A, returns B
         For A <- B, given B, returns A
@@ -93,7 +93,7 @@ class Edges:
         return None
 
     @classmethod
-    def traverse_semi_directed(cls, node: Node, edge: Edge) -> Node:
+    def traverse_semi_directed(cls, node: Node, edge: Edge) -> Node | None:
         """
         For A --* B or A o-* B, given A, returns B.
         """

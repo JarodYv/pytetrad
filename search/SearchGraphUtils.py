@@ -48,7 +48,7 @@ class SearchGraphUtils:
             graph.add_directed_edge(from_node, to_node)
 
     @classmethod
-    def translate(cls, name: str, nodes: List[Node]) -> Node:
+    def translate(cls, name: str, nodes: List[Node]) -> Node | None:
         """ Return the string in node list which matches string in background knowledge.
 
         :param name:

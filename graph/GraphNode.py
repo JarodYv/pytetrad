@@ -5,7 +5,6 @@ from graph.NodeEqualityMode import NodeEqualityMode
 from typing import Dict
 
 
-
 class GraphNode(Node):
     """
     Implements a basic node in a graph--that is, a node that is not itself a variable.

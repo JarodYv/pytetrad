@@ -102,7 +102,7 @@ class Knowledge:
     def set_knowledge_group(self, index: int, group: KnowledgeGroup):
         raise NotImplementedError
 
-    def set_tier(self, tier: int, vars: List[str]):
+    def set_tier(self, tier: int, var_list: List[str]):
         raise NotImplementedError
 
     def set_tier_forbidden_within(self, tier: int, forbidden: bool):

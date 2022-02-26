@@ -160,11 +160,11 @@ class Graph:
         raise NotImplementedError
 
     # Returns the edge connecting node1 and node2, provided a unique such edge exists.
-    def get_edge(self, node1: Node, node2: Node) -> Edge:
+    def get_edge(self, node1: Node, node2: Node) -> Edge | None:
         raise NotImplementedError
 
     # Returns the directed edge from node1 to node2, if there is one.
-    def get_directed_edge(self, node1: Node, node2: Node) -> Edge:
+    def get_directed_edge(self, node1: Node, node2: Node) -> Edge | None:
         raise NotImplementedError
 
     # Returns the list of edges connected to a particular node.
@@ -181,7 +181,7 @@ class Graph:
         raise NotImplementedError
 
     # Returns the endpoint along the edge from node1 to node2, at the node2 end.
-    def get_endpoint(self, node1: Node, node2: Node) -> Endpoint:
+    def get_endpoint(self, node1: Node, node2: Node) -> Endpoint | None:
         raise NotImplementedError
 
     # Returns the number of arrow endpoints adjacent to the node.

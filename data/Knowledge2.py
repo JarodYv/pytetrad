@@ -280,7 +280,8 @@ class Knowledge2(Knowledge):
         """
         true if there is no background knowledge recorded.
         """
-        return len(self.forbidden_rules_specs) == 0 and len(self.required_rules_specs) == 0 and len(self.tier_specs) == 0
+        return len(self.forbidden_rules_specs) == 0 and len(self.required_rules_specs) == 0 and len(
+            self.tier_specs) == 0
 
     def is_tier_forbidden_within(self, tier: int) -> bool:
         """
@@ -533,9 +534,7 @@ class Knowledge2(Knowledge):
     def __eq__(self, other):
         if not other or not isinstance(other, Knowledge2):
             return False
-        return self.forbidden_rules_specs == other.forbidden_rules_specs and \
-               self.required_rules_specs == other.required_rules_specs and \
-               self.tier_specs == other.tier_specs
+        return self.forbidden_rules_specs == other.forbidden_rules_specs and self.required_rules_specs == other.required_rules_specs and self.tier_specs == other.tier_specs
 
     def __hash__(self):
         hash_code = 37

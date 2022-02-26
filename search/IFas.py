@@ -39,7 +39,7 @@ class IFas:
     def search(self) -> Graph:
         raise NotImplementedError
 
-    def search_with_node(self, nodes: List[Node]) -> Graph:
+    def search_with_node(self, nodes: List[Node]) -> Graph | None:
         raise NotImplementedError
 
     def get_elapsed_time(self) -> int:
@@ -54,7 +54,7 @@ class IFas:
     def get_nodes(self) -> List[Node]:
         raise NotImplementedError
 
-    def get_ambiguous_triples(self, node: Node) -> List[Triple]:
+    def get_ambiguous_triples(self, node: Node) -> List[Triple] | None:
         raise NotImplementedError
 
     def is_verbose(self) -> bool:
