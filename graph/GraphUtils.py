@@ -1,7 +1,10 @@
+from collections import deque
+
 from graph.Graph import Graph
 from graph.Node import Node
 from graph.Edge import Edge
 from graph.Edges import Edges
+from graph.NodeType import NodeType
 from graph.Triple import Triple
 from graph.Endpoint import Endpoint
 from graph.EdgeProperty import EdgeProperty
@@ -330,3 +333,152 @@ class GraphUtils:
             fmt.append("\n\n%s" % cls.triples2text(dotted_underline_triples, "Dotted underline triples:"))
 
         return "".join(fmt)
+
+    @classmethod
+    def get_causal_ordering(cls, graph: Graph) -> List[Node]:
+        if graph.exists_directed_cycle():
+            raise AttributeError("Graph must be acyclic.")
+        found: List[Node] = []
+        not_found = [node for node in graph.get_nodes() if node.get_node_type() != NodeType.ERROR]
+        all_nodes = list(not_found)
+        while len(not_found) > 0:
+            to_remove = []
+            for node in not_found:
+                parents = graph.get_parents(node)
+                if all(n in found for n in parents):
+                    found.append(node)
+                    to_remove.append(node)
+            not_found = [n for n in not_found if n not in to_remove]
+        return found
+
+    @classmethod
+    def get_sepset(cls, x: Node, y: Node, graph: Graph) -> List[Node] | None:
+        bound = -1
+        sepset = cls.get_sepset_visit(x, y, graph, bound)
+        if not sepset:
+            sepset = cls.get_sepset_visit(y, x, graph, bound)
+        return sepset
+
+    @classmethod
+    def get_sepset_visit(cls, x: Node, y: Node, graph: Graph, bound: int) -> List[Node] | None:
+        if x == y:
+            return None
+        z: List[Node] = []
+        while True:
+            _z = z.copy()
+            path = {x}
+            colliders = set()
+
+            for b in graph.get_adjacent_nodes(x):
+                if cls.sepset_path_found(x, b, y, path, z, graph, colliders, bound):
+                    return None
+
+            z.sort()
+            _z.sort()
+            if z == _z:
+                break
+
+        return z
+
+    @classmethod
+    def sepset_path_found(cls, a: Node, b: Node, y: Node, path: Set[Node], z: List[Node], graph: Graph,
+                          colliders: Set[Triple], bound: int) -> bool:
+        if b == y:
+            return True
+
+        if b in path:
+            return False
+
+        if len(path) > (1000 if bound == -1 else bound):
+            return False
+
+        path.add(b)
+        if b.get_node_type == NodeType.LATENT or b in z:
+            pass_nodes = cls.get_pass_nodes(a, b, z, graph, None)
+            for c in pass_nodes:
+                if cls.sepset_path_found(b, c, y, path, z, graph, colliders, bound):
+                    path.remove(b)
+                    return True
+            path.remove(b)
+            return False
+        else:
+            found1 = False
+            _colliders1: Set[Triple] = set()
+            pass_nodes = cls.get_pass_nodes(a, b, z, graph, _colliders1)
+            for c in pass_nodes:
+                if cls.sepset_path_found(b, c, y, path, z, graph, _colliders1, bound):
+                    found1 = True
+                    break
+            if not found1:
+                path.remove(b)
+                colliders |= _colliders1
+                return False
+            z.append(b)
+
+            found2 = False
+            _colliders2: Set[Triple] = set()
+            pass_nodes = cls.get_pass_nodes(a, b, z, graph, None)
+            for c in pass_nodes:
+                if cls.sepset_path_found(b, c, y, path, z, graph, _colliders2, bound):
+                    found2 = True
+                    break
+            if not found2:
+                path.remove(b)
+                colliders |= _colliders2
+                return False
+            z.remove(b)
+            path.remove(b)
+            return True
+
+    @classmethod
+    def get_pass_nodes(cls, a: Node, b: Node, z: List[Node], graph: Graph, colliders: Set[Triple] | None) -> List[Node]:
+        pass_nodes: List[Node] = []
+        for c in graph.get_adjacent_nodes(b):
+            if c == a:
+                continue
+
+            if cls.node_reachable(a, b, c, z, graph, colliders):
+                pass_nodes.append(c)
+        return pass_nodes
+
+    @classmethod
+    def node_reachable(cls, a: Node, b: Node, c: Node, z: List[Node], graph: Graph,
+                       colliders: List[Triple] | None) -> bool:
+        collider = graph.is_def_collider(a, b, c)
+
+        if not collider and not (b in z):
+            return True
+
+        ancestor = cls.is_ancestor(b, z, graph)
+
+        collider_reachable = collider and ancestor
+
+        if colliders is not None and collider and not ancestor:
+            colliders.append(Triple(a, b, c))
+
+        return collider_reachable
+
+    @classmethod
+    def is_ancestor(cls, b: Node, z: List[Node], graph: Graph) -> bool:
+        if b in z:
+            return True
+
+        q = deque([])
+        v = set()
+
+        for node in z:
+            q.append(node)
+            v.add(node)
+
+        while len(q) > 0:
+            t = q.pop()
+
+            if t == b:
+                return True
+
+            for c in graph.get_parents(t):
+                if c not in v:
+                    q.append(c)
+                    v.add(c)
+
+        return False

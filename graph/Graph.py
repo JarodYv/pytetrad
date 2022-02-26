@@ -59,12 +59,10 @@ class Graph:
         """
         raise NotImplementedError
 
-    # Adds the specified edge to the graph, provided it is not already in the
-    # graph.
     def add_edge(self, edge: Edge) -> bool:
         """  Adds the specified edge to the graph, provided it is not already in the graph.
 
-        :param edge:
+        :param edge: edge add to graph
         :return: True if the edge was added, False if not.
         """
         raise NotImplementedError
@@ -477,7 +475,7 @@ class Graph:
         raise NotImplementedError
 
     # Returns the nodes in the sepset of node1 and node2.
-    def get_sepset(self, node1: Node, node2: Node) -> List[Node]:
+    def get_sepset(self, node1: Node, node2: Node) -> List[Node] | None:
         raise NotImplementedError
 
     # Sets the list of nodes for this graph.

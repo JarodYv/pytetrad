@@ -3,7 +3,7 @@ import itertools
 from graph.Graph import Graph
 from graph.GraphUtils import GraphUtils
 from graph.Node import Node
-from typing import List, Dict, Set
+from typing import List, Dict, Set, Any
 from graph.Edges import Edges
 from graph.Edge import Edge
 from graph.Endpoint import Endpoint
@@ -14,7 +14,7 @@ from graph.NodeType import NodeType
 class EdgeListGraph(Graph):
     """
     Stores a graph a list of lists of edges adjacent to each node in the graph,
-    with an additional list storing all of the edges in the graph. The edges are
+    with an additional list storing all the edges in the graph. The edges are
     of the form N1 *-# N2. Multiple edges may be added per node pair to this
     graph, with the caveat that all edges of the form N1 *-# N2 will be
     considered equal. For example, if the edge X --> Y is added to the graph,
@@ -23,18 +23,18 @@ class EdgeListGraph(Graph):
     """
 
     def __init__(self, graph: Graph | None = None, nodes: List[Node] | None = None):
-        self.edge_lists = Dict[Node, List[Edge]]()
-        self.nodes = List[Node]()
-        self.edges_set = Set[Node]()
-        self.names_hash = Dict[str, Node]()
+        self.edge_lists: Dict[Node, List[Edge]] = {}
+        self.nodes: List[Node] = []
+        self.edges_set: Set[Edge] = set()
+        self.names_hash: Dict[str, Node] = {}
         self.pattern = False
         self.pag = False
         self.stuff_removed_since_last_triple_access = False
-        self.attributes = Dict[str, object]()
-        self.ambiguous_triples = Set[Triple]()
-        self.underline_triples = Set[Triple]()
-        self.dotted_underline_triples = Set[Triple]()
-        self.highlighted_edges = Set[Edge]()
+        self.attributes: Dict[str, Any] = {}
+        self.ambiguous_triples: Set[Triple] = set()
+        self.underline_triples: Set[Triple] = set()
+        self.dotted_underline_triples: Set[Triple] = set()
+        self.highlighted_edges: Set[Edge] = set()
         self.ancestors = None
         if graph:
             self.transfer_nodes_and_edges(graph)
@@ -895,7 +895,7 @@ class EdgeListGraph(Graph):
                 self.dotted_underline_triples.remove(t)
         self.stuff_removed_since_last_triple_access = False
 
-    def get_sepset(self, node1: Node, node2: Node) -> List[Node]:
+    def get_sepset(self, node1: Node, node2: Node) -> List[Node] | None:
         return GraphUtils.get_sepset(node1, node2, self)
 
     def set_nodes(self, nodes: List[Node]):
@@ -904,15 +904,15 @@ class EdgeListGraph(Graph):
         self.nodes.clear()
         self.nodes.extend(nodes)
 
-    def get_all_attributes(self) -> Dict[str, object]:
+    def get_all_attributes(self) -> Dict[str, Any]:
         return self.attributes
 
-    def get_attribute(self, key: str) -> object:
+    def get_attribute(self, key: str):
         return self.attributes.get(key, Node)
 
     def remove_attribute(self, key: str):
         if key in self.attributes:
             del self.attributes[key]
 
-    def add_attribute(self, key: str, value: object):
+    def add_attribute(self, key: str, value):
         self.attributes[key] = value
