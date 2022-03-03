@@ -1,6 +1,6 @@
 import itertools
 
-from search.IndependenceTest import IndependenceTest
+from search.idt.IndependenceTest import IndependenceTest
 from search.ConflictRule import ConflictRule
 from data.Knowledge import Knowledge
 from data.Knowledge2 import Knowledge2
@@ -123,7 +123,7 @@ class OrientCollidersMaxP:
         combinations = itertools.combinations(range(len(adj_a)), self.depth)
         for combination in combinations:
             s = GraphUtils.as_list(combination, adj_a)
-            self.independence_test.is_independent(a, c, s)
+            self.independence_test.is_independents(a, c, s)
             _p = self.independence_test.get_p_value()
             if _p > p:
                 p = _p
@@ -139,7 +139,7 @@ class OrientCollidersMaxP:
         combinations = itertools.combinations(range(len(adj_c)), self.depth)
         for combination in combinations:
             s = GraphUtils.as_list(combination, adj_c)
-            self.independence_test.is_independent(a, c, s)
+            self.independence_test.is_independents(a, c, s)
             _p = self.independence_test.get_p_value()
             if _p > p:
                 p = _p
@@ -163,7 +163,7 @@ class OrientCollidersMaxP:
             return
         if self.knowledge.is_forbidden(c.get_name(), b.get_name()):
             return
-        self.independence_test.is_independent(a, b, Node)
+        self.independence_test.is_independent(a, c)
         s1 = self.independence_test.get_score()
         self.independence_test.is_independent(a, c, b)
         s2 = self.independence_test.get_score()
