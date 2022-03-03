@@ -116,7 +116,6 @@ class MeekRules(ImpliedOrientation):
         adj_y: Set[Node] = set(graph.get_adjacent_nodes(y))
         return adj_x & adj_y
 
-    # TODO meek_r1, meek_r2, meek_r3, meek_r4
     def meek_r1(self, b: Node, c: Node, graph: Graph, visited: Set[Node]) -> bool:
         """
         Meek's rule R1: if a-->b, b---c, and a not adj to c, then b-->c

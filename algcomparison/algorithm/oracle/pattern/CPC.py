@@ -9,7 +9,6 @@ from data.DataModel import DataModel
 from data.DataType import DataType
 from graph.Graph import Graph
 from data.Knowledge import Knowledge
-from util import Parameters
 from search.SearchGraphUtils import SearchGraphUtils
 from graph.EdgeListGraph import EdgeListGraph
 from search.PcAll import PcAll, FasType, ColliderDiscovery, Concurrent
@@ -24,8 +23,8 @@ class CPC(Algorithm, TakesInitialGraph, HasKnowledge, TakesIndependenceWrapper):
     def __init__(self, test: IndependenceWrapper = None, algorithm: Algorithm = None):
         self.test = test
         self.algorithm = algorithm
-        self.initial_graph: Graph = None
-        self.knowledge: Knowledge = None
+        self.initial_graph: Graph | None = None
+        self.knowledge: Knowledge | None = None
 
     def search(self, dataset: DataModel, **parameters) -> Graph:
         # if parameters["number_resampling"] < 1:

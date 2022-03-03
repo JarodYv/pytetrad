@@ -18,7 +18,7 @@ class SepsetMap:
     """
 
     def __init__(self, sepset=None):
-        self.parents = Dict[Node, Set[Node]]
+        self.parents: Dict[Node, Set[Node]] = {}
         if sepset:
             self.sepsets = dict(sepset.sepsets)
             self.p_values = dict(sepset.p_values)
