@@ -3,7 +3,7 @@ from graph.Graph import Graph
 from graph.Triple import Triple
 from graph.Endpoint import Endpoint
 from graph.GraphUtils import GraphUtils
-from search.IndependenceTest import IndependenceTest
+from search.idt.IndependenceTest import IndependenceTest
 from search.ConflictRule import ConflictRule
 from search.GraphSearch import GraphSearch
 from search.MeekRules import MeekRules
@@ -89,15 +89,17 @@ class PcAll(GraphSearch):
                 fas = Fas(self.init_graph, self.get_independence_test())
                 fas.set_heuristic(self.heuristic)
             else:
-                fas = FasConcurrent(self.init_graph, self.get_independence_test())
-                fas.setStable(False)
+                raise ValueError("It's not support concurrent in Python temporarily")
+                # fas = FasConcurrent(self.init_graph, self.get_independence_test())
+                # fas.setStable(False)
         else:
             if self.concurrent == Concurrent.NO:
                 fas = Fas(self.init_graph, self.get_independence_test())
-                fas.setStable(True)
+                fas.set_stable(True)
             else:
-                fas = FasConcurrent(self.init_graph, self.get_independence_test())
-                fas.setStable(True)
+                raise ValueError("It's not support concurrent in Python temporarily")
+                # fas = FasConcurrent(self.init_graph, self.get_independence_test())
+                # fas.setStable(True)
 
         fas.set_knowledge(self.get_knowledge())
         fas.set_depth(self.get_depth())
@@ -148,7 +150,7 @@ class PcAll(GraphSearch):
             adjacent_nodes = self.graph.get_adjacent_nodes(y)
             if len(adjacent_nodes) < 2:
                 continue
-            combinations = itertools.combinations(range(len(adjacent_nodes), 2))
+            combinations = itertools.combinations(range(len(adjacent_nodes)), 2)
             for combination in combinations:
                 x = adjacent_nodes[combination[0]]
                 z = adjacent_nodes[combination[1]]
@@ -239,20 +241,20 @@ class PcAll(GraphSearch):
             adjacent_nodes = graph.get_adjacent_nodes(b)
             if len(adjacent_nodes) < 2:
                 continue
-            combinations = itertools.combinations(range(len(adjacent_nodes), 2))
+            combinations = itertools.combinations(range(len(adjacent_nodes)), 2)
             for combination in combinations:
                 a = adjacent_nodes[combination[0]]
                 c = adjacent_nodes[combination[1]]
                 if self.graph.is_adjacent_to(a, c):
                     continue
-                sepset = sep.get(a, c)
+                sepset = sep.gets(a, c)
                 s2 = list(sepset)
                 if b not in s2:
                     s2.append(b)
                 if b not in sepset and PcAll.is_arrowpoint_allowed(a, b, knowledge) and PcAll.is_arrowpoint_allowed(c,
                                                                                                                     b,
                                                                                                                     knowledge):
-                    self.orient_collider(a, b, c, graph, conflict_rule)
+                    self.orient_collider(a, b, c, conflict_rule, graph)
                     if verbose:
                         print(f"Collider orientation <{a}, {b}, {c}> sepset = {sepset}")
 
@@ -333,3 +335,22 @@ class PcAll(GraphSearch):
             return True
         return not knowledge.is_required(str(to_node), str(from_node)) and not knowledge.is_forbidden(str(from_node),
                                                                                                       str(to_node))
+
+    @classmethod
+    def orient_collider(cls, x: Node, y: Node, z: Node, conflict_rule: ConflictRule, graph: Graph):
+        if conflict_rule == ConflictRule.PRIORITY:
+            if not (graph.get_endpoint(y, x) == Endpoint.ARROW or graph.get_endpoint(y, z) == Endpoint.ARROW):
+                graph.remove_connecting_edge(x, y)
+                graph.remove_connecting_edge(z, y)
+                graph.add_directed_edge(x, y)
+                graph.add_directed_edge(z, y)
+        elif conflict_rule == ConflictRule.BIDIRECTED:
+            graph.set_endpoint(x, y, Endpoint.ARROW)
+            graph.set_endpoint(z, y, Endpoint.ARROW)
+            print("Orienting " + str(graph.get_edge(x, y)) + " " + str(graph.get_edge(z, y)))
+            print("graph = " + str(graph))
+        elif conflict_rule == ConflictRule.OVERWRITE:
+            graph.remove_connecting_edge(x, y)
+            graph.remove_connecting_edge(z, y)
+            graph.add_directed_edge(x, y)
+            graph.add_directed_edge(z, y)
