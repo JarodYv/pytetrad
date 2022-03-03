@@ -3,7 +3,7 @@ import itertools
 from graph.Graph import Graph
 from graph.GraphUtils import GraphUtils
 from graph.Node import Node
-from typing import List, Dict, Set, Any
+from typing import List, Dict, Set, Any, Optional
 from graph.Edges import Edges
 from graph.Edge import Edge
 from graph.Endpoint import Endpoint
@@ -22,7 +22,7 @@ class EdgeListGraph(Graph):
     Edges from nodes to themselves may also be added.
     """
 
-    def __init__(self, graph: Graph | None = None, nodes: List[Node] | None = None):
+    def __init__(self, graph: Optional[Graph] = None, nodes: Optional[List[Node]] = None):
         self.edge_lists: Dict[Node, List[Edge]] = {}
         self.nodes: List[Node] = []
         self.edges_set: Set[Edge] = set()
