@@ -92,3 +92,22 @@ class GraphNode(Node):
             return self == other
         if NodeEqualityMode.get_equality_type() == NodeEqualityMode.NodeEqualityType.NAME:
             return isinstance(other, GraphNode) and other.get_name() == self.name
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __lt__(self, other):
+        name1 = self.get_name()
+        name2 = other.get_name()
+        return name1 < name2
+
+    def __gt__(self, other):
+        name1 = self.get_name()
+        name2 = other.get_name()
+        return name1 > name2
+
+    def __ge__(self, other):
+        return not self.__lt__(other)
+
+    def __le__(self, other):
+        return not self.__gt__(other)
