@@ -43,7 +43,7 @@ class PcAll(GraphSearch):
 
     def __init__(self, independence_test: IndependenceTest, initial_graph: Graph):
         if not independence_test:
-            raise ValueError
+            raise ValueError("independence test is required")
         self.independence_test = independence_test
         self.init_graph: Graph = initial_graph
         self.aggressively_prevent_cycles: bool = False
@@ -180,13 +180,13 @@ class PcAll(GraphSearch):
                 combinations = itertools.combinations(range(len(adj_i)), d)
                 for combination in combinations:
                     v = GraphUtils.as_list(combination, adj_i)
-                    if self.get_independence_test().is_independent(i, k, v):
+                    if self.get_independence_test().is_independents(i, k, v):
                         sepsets.append(v)
             if len(adj_k) >= 2 and d <= len(adj_k):
                 combinations = itertools.combinations(range(len(adj_k)), d)
                 for combination in combinations:
                     v = GraphUtils.as_list(combination, adj_k)
-                    if self.get_independence_test().is_independent(i, k, v):
+                    if self.get_independence_test().is_independents(i, k, v):
                         sepsets.append(v)
         return sepsets
 

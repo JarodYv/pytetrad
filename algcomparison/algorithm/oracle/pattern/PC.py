@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from algcomparison.algorithm.Algorithm import Algorithm
 from algcomparison.utils.HasKnowledge import HasKnowledge
@@ -20,7 +20,7 @@ class PC(Algorithm, TakesInitialGraph, HasKnowledge, TakesIndependenceWrapper):
     PC
     """
 
-    def __init__(self, test: IndependenceWrapper = None, algorithm: Algorithm = None):
+    def __init__(self, test: Optional[IndependenceWrapper] = None, algorithm: Optional[Algorithm] = None):
         self.test = test
         self.algorithm = algorithm
         self.initial_graph: Graph | None = None
