@@ -1,6 +1,5 @@
 from algcomparison.utils.HasParameters import HasParameters
 from graph.Graph import Graph
-from util import Parameters
 from data.DataType import DataType
 from data.DataModel import DataModel
 from typing import List
@@ -11,7 +10,7 @@ class Algorithm(HasParameters):
     Interface that algorithm must implement
     """
 
-    def search(self, dataset: DataModel, parameters: Parameters) -> Graph:
+    def search(self, dataset: DataModel, **parameters) -> Graph:
         """ Runs the search.
 
         :param dataset: The data set to run to the search on
