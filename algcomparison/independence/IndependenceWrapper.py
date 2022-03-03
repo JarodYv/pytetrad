@@ -1,5 +1,5 @@
 from typing import List
-from search.IndependenceTest import IndependenceTest
+from search.idt.IndependenceTest import IndependenceTest
 from algcomparison.utils.HasParameters import HasParameters
 from data.DataType import DataType
 from data.DataModel import DataModel

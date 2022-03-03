@@ -1,4 +1,4 @@
-from IndependenceTest import IndependenceTest
+from search.idt.IndependenceTest import IndependenceTest
 from SepsetMap import SepsetMap
 from data.Knowledge import Knowledge
 from graph.Triple import Triple
@@ -51,7 +51,7 @@ class IFas:
     def set_true_graph(self, true_graph: Graph):
         raise NotImplementedError
 
-    def get_nodes(self) -> List[Node]:
+    def get_nodes(self) -> List[Node] | None:
         raise NotImplementedError
 
     def get_ambiguous_triples(self, node: Node) -> List[Triple] | None:

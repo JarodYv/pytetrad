@@ -8,7 +8,7 @@ from graph.Graph import Graph
 from graph.EdgeListGraph import EdgeListGraph
 from graph.Node import Node
 from graph.Triple import Triple
-from search.IndependenceTest import IndependenceTest
+from search.idt.IndependenceTest import IndependenceTest
 from search.SepsetMap import SepsetMap
 
 
@@ -107,7 +107,7 @@ class Fas(IFas):
     def set_true_graph(self, true_graph: Graph):
         pass
 
-    def get_nodes(self) -> List[Node]:
+    def get_nodes(self) -> List[Node] | None:
         return self.test.get_variables()
 
     def get_ambiguous_triples(self, node: Node) -> List[Triple] | None:

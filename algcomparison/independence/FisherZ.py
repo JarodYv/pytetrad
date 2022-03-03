@@ -2,7 +2,7 @@ from typing import List
 
 from data.DataModel import DataModel
 from data.DataType import DataType
-from search.IndependenceTest import IndependenceTest
+from search.idt.IndependenceTest import IndependenceTest
 from .IndependenceWrapper import IndependenceWrapper
 
 
