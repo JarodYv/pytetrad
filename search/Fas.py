@@ -1,13 +1,18 @@
+import itertools
 import logging
-from typing import List
+from typing import List, Dict, Set
 
 from IFas import IFas
 from data.Knowledge import Knowledge
 from data.Knowledge2 import Knowledge2
+from graph.Edge import Edge
+from graph.Edges import Edges
 from graph.Graph import Graph
 from graph.EdgeListGraph import EdgeListGraph
+from graph.GraphUtils import GraphUtils
 from graph.Node import Node
 from graph.Triple import Triple
+from search.SearchLogUtils import independence_fact, independence_fact_msg
 from search.idt.IndependenceTest import IndependenceTest
 from search.SepsetMap import SepsetMap
 
@@ -93,13 +98,166 @@ class Fas(IFas):
         self.depth = depth
 
     def search(self) -> Graph:
-        pass
+        """
+        Discovers all adjacencies in data.  The procedure is to remove edges in the graph which connect pairs of
+        variables which are independent conditional on some other set of variables in the graph (the "sepset").
+        These are removed in tiers. First, edges which are independent conditional on zero other variables are removed,
+        then edges which are independent conditional on one other variable are removed, then two, then three, and so on,
+        until no more edges can be removed from the graph. The edges which remain in the graph after this procedure are
+        the adjacencies in the data.
+
+        @return a SepSet, which indicates which variables are independent conditional on which other variables
+        """
+        self.logger.info("Starting Fast Adjacency Search.")
+        _depth = 1000 if self.depth == -1 else self.depth
+        self.sepset = SepsetMap()
+        edges: List[Edge] = []
+        nodes: List[Node] = list(self.test.get_variables())
+        scores: Dict[Edge, float] = {}
+
+        if self.heuristic == 1:
+            nodes.sort()
+
+        for i in range(len(nodes)):
+            for j in range(i + 1, len(nodes)):
+                edges.append(Edges.undirected_edge(nodes[i], nodes[j]))
+
+        for edge in edges:
+            self.test.is_independents(edge.get_node1(), edge.get_node2(), [])
+            scores[edge] = self.test.get_score()
+
+        if self.heuristic == 2 or self.heuristic == 3:
+            edges = [k for k, v in sorted(scores.items(), key=lambda item: item[1])]
+
+        adjacencies: Dict[Node, Set[Node]] = {}
+        for node in nodes:
+            s = set()
+            for _node in nodes:
+                if _node == node:
+                    continue
+                s.add(_node)
+            adjacencies[node] = s
+
+        for edge in list(edges):
+            if scores[edge] < 0 or \
+                    (self.knowledge.is_forbidden(edge.get_node1().get_name(), edge.get_node2().get_name()) and
+                     self.knowledge.is_forbidden(edge.get_node2().get_name(), edge.get_node1().get_name())):
+                edges.remove(edge)
+                adjacencies[edge.get_node1()].remove(edge.get_node2())
+                adjacencies[edge.get_node2()].remove(edge.get_node1())
+                self.sepset.sets(edge.get_node1(), edge.get_node2(), [])
+
+        for d in range(1, _depth):
+            if self.stable:
+                adjacencies_copy = {}
+                for k, v in adjacencies.items():
+                    adjacencies_copy[k] = set(v)
+                adjacencies = adjacencies_copy
+            more = self.search_at_depth(scores, edges, self.test, adjacencies, d)
+            if not more:
+                break
+
+        # The search graph.
+        # It is assumed going in that all of the true adjacencies of x are in this graph for every node
+        # x. It is hoped (i.e. true in the large sample limit) that true adjacencies are never removed.
+        graph = EdgeListGraph(nodes=nodes)
+        for i in range(len(nodes)):
+            for j in range(i + 1, len(nodes)):
+                x = nodes[i]
+                y = nodes[j]
+                if y in adjacencies[x]:
+                    graph.add_undirected_edge(x, y)
+
+        self.logger.info("Finishing Fast Adjacency Search.")
+        return graph
+
+    def search_at_depth(self, scores: Dict[Edge, float], edges: List[Edge], test: IndependenceTest,
+                        adjacencies: Dict[Node, Set[Node]], depth: int) -> bool:
+        for edge in edges:
+            x = edge.get_node1()
+            y = edge.get_node2()
+            # if Thread.currentThread().isInterrupted():
+            #    break
+            if depth == 0 and self.init_graph:
+                x2 = self.init_graph.get_node(x.get_name())
+                y2 = self.init_graph.get_node(y.get_name())
+                if not self.init_graph.is_adjacent_to(x2, y2):
+                    continue
+            self.check_side(scores, test, adjacencies, depth, x, y)
+            self.check_side(scores, test, adjacencies, depth, y, x)
+
+        return self.free_degree(adjacencies) > depth
+
+    def free_degree(self, adjacencies: Dict[Node, Set[Node]]) -> int:
+        max_degree = 0
+        for k, v in adjacencies.items():
+            for y in v:
+                adjx = set(v)
+                adjx.remove(y)
+                if len(adjx) > max_degree:
+                    max_degree = len(adjx)
+        return max_degree
+
+    def check_side(self, scores: Dict[Edge, float], test: IndependenceTest, adjacencies: Dict[Node, Set[Node]],
+                   depth: int, x: Node, y: Node):
+        if y not in adjacencies[x]:
+            return
+
+        _adjx = list(adjacencies[x])
+        _adjx.remove(y)
+
+        if self.heuristic == 1 or self.heuristic == 2:
+            _adjx.sort()
+
+        ppx = self.possible_parents(x, _adjx, self.knowledge, y)
+        scores2 = {}
+
+        for node in ppx:
+            _score = scores[Edges.undirected_edge(node, x)]
+            scores2[node] = _score
+
+        if self.heuristic == 3:
+            ppx = [k for k, v in sorted(scores2.items(), key=lambda item: item[1], reverse=True)]
+
+        if len(ppx) > depth:
+            combinations = itertools.combinations(ppx, 2)
+            for choice in combinations:
+                # if (Thread.currentThread().isInterrupted())
+                #   break
+                z = GraphUtils.as_list(choice, ppx)
+                self.numIndependenceTests += 1
+                independent = test.is_independents(x, y, z)
+                if not independent:
+                    self.numDependenceJudgement += 1
+                no_edge_required = self.knowledge.no_edge_required(x.get_name(), y.get_name())
+                if independent and no_edge_required:
+                    adjacencies.get(x).remove(y)
+                    adjacencies.get(y).remove(x)
+                    self.get_sepsets().sets(x, y, z)
+                    if self.verbose:
+                        self.logger.info("{} score = {:.2e}".format(independence_fact(x, y, z), test.get_score()))
+                        print(independence_fact_msg(x, y, z, test.get_p_value()))
+
+    def possible_parents(self, x: Node, adjx: List[Node], knowledge: Knowledge, y: Node) -> List[Node]:
+        possible_parents = []
+        _x = x.get_name()
+        for z in adjx:
+            if y == z:
+                continue
+            _z = z.get_name()
+            if self.possible_parent_of(_z, _x, knowledge):
+                possible_parents.append(z)
+
+        return possible_parents
+
+    def possible_parent_of(self, z: str, x: str, knowledge: Knowledge) -> bool:
+        return not knowledge.is_forbidden(z, x) and not knowledge.is_required(x, z)
 
     def search_with_node(self, nodes: List[Node]) -> Graph | None:
         return None
 
     def get_elapsed_time(self) -> int:
-        pass
+        return 0
 
     def get_num_independence_tests(self) -> int:
         return self.numIndependenceTests
