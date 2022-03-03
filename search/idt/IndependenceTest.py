@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from graph.Node import Node
 from data.DataModel import DataModel
 import numpy as np
@@ -12,7 +12,7 @@ class IndependenceTest:
     def ind_test_subset(self, nodes: List[Node]):
         raise NotImplementedError
 
-    def is_independent(self, x: Node, y: Node, z: List[Node]) -> bool:
+    def is_independents(self, x: Node, y: Node, z: List[Node]) -> bool:
         """ Return true if the given independence question is judged true, false if not.
         The independence question is of the form x _||_ y | z, z = <z1,...,zn>,
         where x, y, z1,...,zn are variables in the list returned by getVariableNames().
@@ -24,7 +24,31 @@ class IndependenceTest:
         """
         raise NotImplementedError
 
-    def is_dependent(self, x: Node, y: Node, z: List[Node]) -> bool:
+    def is_independent(self, x: Node, y: Node, z: Optional[Node] = None) -> bool:
+        """ Return true if the given independence question is judged true, false if not.
+        The independence question is of the form x _||_ y | z, z = <z1,...,zn>,
+        where x, y, z1,...,zn are variables in the list returned by getVariableNames().
+
+        :param x:
+        :param y:
+        :param z:
+        :return:
+        """
+        raise NotImplementedError
+
+    def is_dependents(self, x: Node, y: Node, z: List[Node]) -> bool:
+        """ Return true if the given independence question is judged false, true if not.
+        The independence question is of the form x _||_ y | z, z = <z1,...,zn>,
+        where x, y, z1,...,zn are variables in the list returned by getVariableNames().
+
+        :param x:
+        :param y:
+        :param z:
+        :return:
+        """
+        raise NotImplementedError
+
+    def is_dependent(self, x: Node, y: Node, z: Optional[Node] = None) -> bool:
         """ Return true if the given independence question is judged false, true if not.
         The independence question is of the form x _||_ y | z, z = <z1,...,zn>,
         where x, y, z1,...,zn are variables in the list returned by getVariableNames().
