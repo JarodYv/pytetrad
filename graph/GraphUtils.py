@@ -8,7 +8,7 @@ from graph.NodeType import NodeType
 from graph.Triple import Triple
 from graph.Endpoint import Endpoint
 from graph.EdgeProperty import EdgeProperty
-from typing import List, Set, Dict
+from typing import List, Set, Dict, Optional
 
 
 class GraphUtils:
@@ -352,7 +352,7 @@ class GraphUtils:
         return found
 
     @classmethod
-    def get_sepset(cls, x: Node, y: Node, graph: Graph) -> List[Node] | None:
+    def get_sepset(cls, x: Node, y: Node, graph: Graph) -> Optional[List[Node]]:
         bound = -1
         sepset = cls.get_sepset_visit(x, y, graph, bound)
         if not sepset:
@@ -360,7 +360,7 @@ class GraphUtils:
         return sepset
 
     @classmethod
-    def get_sepset_visit(cls, x: Node, y: Node, graph: Graph, bound: int) -> List[Node] | None:
+    def get_sepset_visit(cls, x: Node, y: Node, graph: Graph, bound: int) -> Optional[List[Node]]:
         if x == y:
             return None
         z: List[Node] = []
@@ -431,7 +431,8 @@ class GraphUtils:
             return True
 
     @classmethod
-    def get_pass_nodes(cls, a: Node, b: Node, z: List[Node], graph: Graph, colliders: Set[Triple] | None) -> List[Node]:
+    def get_pass_nodes(cls, a: Node, b: Node, z: List[Node], graph: Graph, colliders: Optional[Set[Triple]]) -> List[
+        Node]:
         pass_nodes: List[Node] = []
         for c in graph.get_adjacent_nodes(b):
             if c == a:
@@ -443,7 +444,7 @@ class GraphUtils:
 
     @classmethod
     def node_reachable(cls, a: Node, b: Node, c: Node, z: List[Node], graph: Graph,
-                       colliders: List[Triple] | None) -> bool:
+                       colliders: Optional[List[Triple]]) -> bool:
         collider = graph.is_def_collider(a, b, c)
 
         if not collider and not (b in z):

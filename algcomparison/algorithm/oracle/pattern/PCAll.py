@@ -19,8 +19,8 @@ class PCAll(Algorithm, TakesInitialGraph, HasKnowledge, TakesIndependenceWrapper
     def __init__(self, test: Optional[IndependenceWrapper] = None, algorithm: Optional[Algorithm] = None):
         self.test = test
         self.algorithm = algorithm
-        self.initial_graph: Graph | None = None
-        self.knowledge: Knowledge | None = None
+        self.initial_graph: Optional[Graph] = None
+        self.knowledge: Optional[Knowledge] = None
 
     def get_comparison_graph(self, graph: Graph) -> Graph:
         return SearchGraphUtils.pattern_for_dag(EdgeListGraph(graph, nodes=None))

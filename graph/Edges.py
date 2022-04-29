@@ -1,3 +1,5 @@
+from typing import Optional
+
 from graph.Edge import Edge
 from graph.Node import Node
 from graph.Endpoint import Endpoint
@@ -62,7 +64,7 @@ class Edges:
         return edge.get_endpoint1() == Endpoint.TAIL and edge.get_endpoint2() == Endpoint.TAIL
 
     @classmethod
-    def traverse(cls, node: Node, edge: Edge) -> Node | None:
+    def traverse(cls, node: Node, edge: Edge) -> Optional[Node]:
         """ Return the node opposite the given node along the given edge.
 
         :param node:
@@ -78,7 +80,7 @@ class Edges:
         return None
 
     @classmethod
-    def traverse_directed(cls, node: Node, edge: Edge) -> Node | None:
+    def traverse_directed(cls, node: Node, edge: Edge) -> Optional[Node]:
         """
         For A -> B, given A, returns B
         For A <- B, given B, returns A
@@ -93,7 +95,7 @@ class Edges:
         return None
 
     @classmethod
-    def traverse_semi_directed(cls, node: Node, edge: Edge) -> Node | None:
+    def traverse_semi_directed(cls, node: Node, edge: Edge) -> Optional[Node]:
         """
         For A --* B or A o-* B, given A, returns B.
         """

@@ -1,5 +1,5 @@
 import logging
-from typing import Set, Dict, List
+from typing import Set, Dict, List, Optional
 
 from data.Knowledge import Knowledge
 from data.Knowledge2 import Knowledge2
@@ -29,7 +29,7 @@ class FasConcurrent(IFas):
     It uses a slightly different algorithm from FasStableConcurrent, probably better.
     """
 
-    def __init__(self, test: IndependenceTest, graph: Graph | None = None):
+    def __init__(self, test: IndependenceTest, graph: Optional[Graph] = None):
         self.test = test
         if graph:
             self.initial_graph = graph
@@ -101,7 +101,7 @@ class FasConcurrent(IFas):
                     max_degree = len(adjx)
         return max_degree
 
-    def search_with_node(self, nodes) -> Graph | None:
+    def search_with_node(self, nodes) -> Optional[Graph]:
         return None
 
     def get_elapsed_time(self) -> int:
@@ -139,10 +139,10 @@ class FasConcurrent(IFas):
     def set_true_graph(self, graph):
         pass
 
-    def get_nodes(self) -> List[Node] | None:
+    def get_nodes(self) -> Optional[List[Node]]:
         return None
 
-    def get_ambiguous_triples(self, node: Node) -> List[Triple] | None:
+    def get_ambiguous_triples(self, node: Node) -> Optional[List[Triple]]:
         return None
 
     def get_sepsets(self) -> SepsetMap:

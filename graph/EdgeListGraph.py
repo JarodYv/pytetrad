@@ -343,7 +343,7 @@ class EdgeListGraph(Graph):
             self._collect_descendants_visit(node, descendants)
         return list(descendants)
 
-    def get_edge(self, node1: Node, node2: Node) -> Edge | None:
+    def get_edge(self, node1: Node, node2: Node) -> Optional[Edge]:
         """ return the edge connecting node1 and node2, provided a unique such edge
 
         """
@@ -357,7 +357,7 @@ class EdgeListGraph(Graph):
                 return edge
         return None
 
-    def get_directed_edge(self, node1: Node, node2: Node) -> Edge | None:
+    def get_directed_edge(self, node1: Node, node2: Node) -> Optional[Edge]:
         edges = self.get_connecting_edges(node1, node2)
         if not edges or len(edges) == 0:
             return None
@@ -392,7 +392,7 @@ class EdgeListGraph(Graph):
     def get_graph_edges(self) -> Set[Edge]:
         return Set[Edge](self.edges_set)
 
-    def get_endpoint(self, node1: Node, node2: Node) -> Endpoint | None:
+    def get_endpoint(self, node1: Node, node2: Node) -> Optional[Endpoint]:
         """
         return the endpoint along the edge from node to node2 at the node2 end.
         """
@@ -895,7 +895,7 @@ class EdgeListGraph(Graph):
                 self.dotted_underline_triples.remove(t)
         self.stuff_removed_since_last_triple_access = False
 
-    def get_sepset(self, node1: Node, node2: Node) -> List[Node] | None:
+    def get_sepset(self, node1: Node, node2: Node) -> Optional[List[Node]]:
         return GraphUtils.get_sepset(node1, node2, self)
 
     def set_nodes(self, nodes: List[Node]):

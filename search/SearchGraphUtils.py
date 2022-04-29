@@ -4,7 +4,7 @@ from graph.Graph import Graph
 from graph.Node import Node
 from graph.EdgeListGraph import EdgeListGraph
 from search.MeekRules import MeekRules
-from typing import List
+from typing import List, Optional
 
 
 class SearchGraphUtils:
@@ -48,7 +48,7 @@ class SearchGraphUtils:
             graph.add_directed_edge(from_node, to_node)
 
     @classmethod
-    def translate(cls, name: str, nodes: List[Node]) -> Node | None:
+    def translate(cls, name: str, nodes: List[Node]) -> Optional[Node]:
         """ Return the string in node list which matches string in background knowledge.
 
         :param name:

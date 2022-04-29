@@ -2,6 +2,7 @@ from typing import List
 
 from data.DataModel import DataModel
 from data.DataType import DataType
+from search.idt.IndTestFisherZ import IndTestFisherZ
 from search.idt.IndependenceTest import IndependenceTest
 from .IndependenceWrapper import IndependenceWrapper
 

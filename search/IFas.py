@@ -4,7 +4,7 @@ from data.Knowledge import Knowledge
 from graph.Triple import Triple
 from graph.Graph import Graph
 from graph.Node import Node
-from typing import List
+from typing import List, Optional
 
 
 class IFas:
@@ -39,7 +39,7 @@ class IFas:
     def search(self) -> Graph:
         raise NotImplementedError
 
-    def search_with_node(self, nodes: List[Node]) -> Graph | None:
+    def search_with_node(self, nodes: List[Node]) -> Optional[Graph]:
         raise NotImplementedError
 
     def get_elapsed_time(self) -> int:
@@ -51,10 +51,10 @@ class IFas:
     def set_true_graph(self, true_graph: Graph):
         raise NotImplementedError
 
-    def get_nodes(self) -> List[Node] | None:
+    def get_nodes(self) -> Optional[List[Node]]:
         raise NotImplementedError
 
-    def get_ambiguous_triples(self, node: Node) -> List[Triple] | None:
+    def get_ambiguous_triples(self, node: Node) -> Optional[List[Triple]]:
         raise NotImplementedError
 
     def is_verbose(self) -> bool:

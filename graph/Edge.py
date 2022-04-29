@@ -2,7 +2,7 @@ from graph.EdgeProperty import EdgeProperty
 from graph.Edges import Edges
 from graph.Node import Node
 from util import Color
-from typing import List
+from typing import List, Optional
 from graph.EdgeTypeProbability import EdgeTypeProbability
 from graph.Endpoint import Endpoint
 from graph.NodeEqualityMode import NodeEqualityMode
@@ -125,7 +125,7 @@ class Edge:
     def get_edge_type_probabilities(self) -> List[EdgeTypeProbability]:
         return self.edge_type_probabilities
 
-    def get_proximal_endpoint(self, node: Node) -> Endpoint | None:
+    def get_proximal_endpoint(self, node: Node) -> Optional[Endpoint]:
         """ return the endpoint nearest to the given node;
         if the given node is not along the edge, returns NoneType
 
@@ -137,7 +137,7 @@ class Edge:
         else:
             return None
 
-    def get_distal_endpoint(self, node: Node) -> Endpoint | None:
+    def get_distal_endpoint(self, node: Node) -> Optional[Endpoint]:
         """ return the endpoint furthest from the given node;
         if the given node is not along the edge, returns NoneType
 
@@ -149,7 +149,7 @@ class Edge:
         else:
             return None
 
-    def get_distal_node(self, node: Node) -> Node | None:
+    def get_distal_node(self, node: Node) -> Optional[Node]:
         """ traverses the edge in an undirected fashion:
         given one node along the edge, returns the node at the opposite end of the edge
 

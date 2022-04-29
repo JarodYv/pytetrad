@@ -1,6 +1,6 @@
 import itertools
 import logging
-from typing import List, Dict, Set
+from typing import List, Dict, Set, Optional
 
 from IFas import IFas
 from data.Knowledge import Knowledge
@@ -253,7 +253,7 @@ class Fas(IFas):
     def possible_parent_of(self, z: str, x: str, knowledge: Knowledge) -> bool:
         return not knowledge.is_forbidden(z, x) and not knowledge.is_required(x, z)
 
-    def search_with_node(self, nodes: List[Node]) -> Graph | None:
+    def search_with_node(self, nodes: List[Node]) -> Optional[Graph]:
         return None
 
     def get_elapsed_time(self) -> int:
@@ -265,10 +265,10 @@ class Fas(IFas):
     def set_true_graph(self, true_graph: Graph):
         pass
 
-    def get_nodes(self) -> List[Node] | None:
+    def get_nodes(self) -> Optional[List[Node]]:
         return self.test.get_variables()
 
-    def get_ambiguous_triples(self, node: Node) -> List[Triple] | None:
+    def get_ambiguous_triples(self, node: Node) -> Optional[List[Triple]]:
         return None
 
     def is_verbose(self) -> bool:
