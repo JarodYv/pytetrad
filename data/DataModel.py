@@ -1,13 +1,13 @@
 from data.KnowledgeTransferable import KnowledgeTransferable
 from data.VariableSource import VariableSource
 from graph.Node import Node
-from data.Knowledge import Knowledge
-from typing import List
+from data.IKnowledge import IKnowledge
+from typing import List, Optional
 
 
 class DataModel(KnowledgeTransferable, VariableSource):
     """ Interface implemented by classes, instantiations of which can serve as data models in Tetrad.
-    Data models may be named if desired; if provided, these names will be used for display purposes.
+    Data models may be named if desired; If provided, these names will be used for display purposes.
 
     This interface is relatively free of methods, mainly because classes that can
     serve as data models in Tetrad are diverse, including continuous and discrete
@@ -36,7 +36,7 @@ class DataModel(KnowledgeTransferable, VariableSource):
     def is_mixed(self) -> bool:
         raise NotImplementedError
 
-    def get_variable(self, name: str) -> Node:
+    def get_variable(self, name: str) -> Optional[Node]:
         raise NotImplementedError
 
     def get_variables(self) -> List[Node]:
@@ -45,8 +45,8 @@ class DataModel(KnowledgeTransferable, VariableSource):
     def get_variable_names(self) -> List[str]:
         raise NotImplementedError
 
-    def get_knowledge(self) -> Knowledge:
+    def get_knowledge(self) -> IKnowledge:
         raise NotImplementedError
 
-    def set_knowledge(self, knowledge: Knowledge):
+    def set_knowledge(self, knowledge: Optional[IKnowledge]):
         raise NotImplementedError
