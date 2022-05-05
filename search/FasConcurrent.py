@@ -1,8 +1,8 @@
 import logging
 from typing import Set, Dict, List, Optional
 
+from data.IKnowledge import IKnowledge
 from data.Knowledge import Knowledge
-from data.Knowledge2 import Knowledge2
 from graph.EdgeListGraph import EdgeListGraph
 from graph.Graph import Graph
 from graph.Node import Node
@@ -41,7 +41,7 @@ class FasConcurrent(IFas):
         self.sepsets = SepsetMap()
         self.num_independence_tests = 0
         self.depth = 1000
-        self.knowledge = Knowledge2()
+        self.knowledge = Knowledge()
         self.logger = logging.Logger("FasConcurrent")
 
     def search(self) -> Graph:
@@ -124,10 +124,10 @@ class FasConcurrent(IFas):
     def get_independence_test(self) -> IndependenceTest:
         return self.test
 
-    def get_knowledge(self) -> Knowledge:
+    def get_knowledge(self) -> IKnowledge:
         return self.knowledge
 
-    def set_knowledge(self, knowledge: Knowledge):
+    def set_knowledge(self, knowledge: IKnowledge):
         if knowledge:
             self.knowledge = knowledge
         else:

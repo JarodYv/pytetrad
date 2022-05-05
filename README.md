@@ -10,8 +10,8 @@
     <a href="https://pypi.org/project/do-calculus/">
         <img alt="" src="https://pypip.in/v/do-calculus/badge.svg">
     </a>
-    <a href="https://pypi.org/project/do-calculus/">
-        <img alt="" src="https://pypip.in/wheel/do-calculus/badge.svg">
+    <a href="https://github.com/planplus/bcoz">
+        <img alt="license" src="https://img.shields.io/github/languages/top/planplus/bcoz"/>
     </a>
     <a href="https://github.com/planplus/bcoz/LICENSE">
         <img alt="license" src="https://img.shields.io/github/license/planplus/bcoz?style=flat-square">

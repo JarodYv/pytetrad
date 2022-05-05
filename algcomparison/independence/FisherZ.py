@@ -1,6 +1,8 @@
 from typing import List
 
+from data.CovarianceMatrix import CovarianceMatrix
 from data.DataModel import DataModel
+from data.DataSet import DataSet
 from data.DataType import DataType
 from search.idt.IndTestFisherZ import IndTestFisherZ
 from search.idt.IndependenceTest import IndependenceTest
@@ -27,4 +29,4 @@ class FisherZ(IndependenceWrapper):
             return IndTestFisherZ(dataset, alpha)
         elif isinstance(dataset, DataSet):
             return IndTestFisherZ(dataset, alpha)
-        raise ValueError("Expecting eithet a data set or a covariance matrix.")
+        raise ValueError("Expecting either a data set or a covariance matrix.")

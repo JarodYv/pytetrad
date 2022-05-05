@@ -45,7 +45,7 @@ class KnowledgeGroup:
         return self.k_to
 
     def get_edges(self) -> List[KnowledgeEdge]:
-        edges = List[str]()
+        edges = List[KnowledgeEdge]()
         for f in self.k_from:
             for t in self.k_to:
                 edges.append(KnowledgeEdge(f, t))

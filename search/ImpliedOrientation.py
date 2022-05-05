@@ -1,4 +1,4 @@
-from data.Knowledge import KnowledgeEdge
+from data.IKnowledge import KnowledgeEdge
 from graph.Graph import Graph
 from graph.Node import Node
 from typing import Set

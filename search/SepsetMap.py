@@ -34,7 +34,7 @@ class SepsetMap:
         :param z:
         :return:
         """
-        pair = [x, y]
+        pair = {x, y}
         if not z:
             del self.sepsets[pair]
         else:
@@ -47,9 +47,9 @@ class SepsetMap:
         :param b:
         :return:
         """
-        pair = [a, b]
+        pair = {a, b}
         return self.sepsets.get(pair, [])
 
     def get_p_value(self, x: Node, y: Node) -> float:
-        pair = [x, y]
+        pair = {x, y}
         return self.p_values.get(pair, 0)

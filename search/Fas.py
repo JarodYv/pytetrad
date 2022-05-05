@@ -3,8 +3,8 @@ import logging
 from typing import List, Dict, Set, Optional
 
 from IFas import IFas
+from data.IKnowledge import IKnowledge
 from data.Knowledge import Knowledge
-from data.Knowledge2 import Knowledge2
 from graph.Edge import Edge
 from graph.Edges import Edges
 from graph.Graph import Graph
@@ -42,7 +42,7 @@ class Fas(IFas):
         self.test = test
 
         # Specification of which edges are forbidden or required.
-        self.knowledge = Knowledge2()
+        self.knowledge = Knowledge()
 
         # FAS-Stable
         self.stable = False
@@ -78,10 +78,10 @@ class Fas(IFas):
     def get_independence_test(self) -> IndependenceTest:
         return self.test
 
-    def get_knowledge(self) -> Knowledge:
+    def get_knowledge(self) -> IKnowledge:
         return self.knowledge
 
-    def set_knowledge(self, knowledge: Knowledge):
+    def set_knowledge(self, knowledge: IKnowledge):
         if not knowledge:
             raise ValueError("Cannot set knowledge to null")
         self.knowledge = knowledge
@@ -238,7 +238,7 @@ class Fas(IFas):
                         self.logger.info("{} score = {:.2e}".format(independence_fact(x, y, z), test.get_score()))
                         print(independence_fact_msg(x, y, z, test.get_p_value()))
 
-    def possible_parents(self, x: Node, adjx: List[Node], knowledge: Knowledge, y: Node) -> List[Node]:
+    def possible_parents(self, x: Node, adjx: List[Node], knowledge: IKnowledge, y: Node) -> List[Node]:
         possible_parents = []
         _x = x.get_name()
         for z in adjx:
@@ -250,7 +250,7 @@ class Fas(IFas):
 
         return possible_parents
 
-    def possible_parent_of(self, z: str, x: str, knowledge: Knowledge) -> bool:
+    def possible_parent_of(self, z: str, x: str, knowledge: IKnowledge) -> bool:
         return not knowledge.is_forbidden(z, x) and not knowledge.is_required(x, z)
 
     def search_with_node(self, nodes: List[Node]) -> Optional[Graph]:

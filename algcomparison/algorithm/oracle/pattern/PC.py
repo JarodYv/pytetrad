@@ -8,7 +8,7 @@ from algcomparison.independence.IndependenceWrapper import IndependenceWrapper
 from data.DataModel import DataModel
 from data.DataType import DataType
 from graph.Graph import Graph
-from data.Knowledge import Knowledge
+from data.IKnowledge import IKnowledge
 from search.SearchGraphUtils import SearchGraphUtils
 from graph.EdgeListGraph import EdgeListGraph
 from search.PcAll import PcAll, FasType, ColliderDiscovery, Concurrent
@@ -24,7 +24,7 @@ class PC(Algorithm, TakesInitialGraph, HasKnowledge, TakesIndependenceWrapper):
         self.test = test
         self.algorithm = algorithm
         self.initial_graph: Optional[Graph] = None
-        self.knowledge: Optional[Knowledge] = None
+        self.knowledge: Optional[IKnowledge] = None
 
     def search(self, dataset: DataModel, **parameters) -> Graph:
         # if parameters["number_resampling"] < 1:
@@ -84,10 +84,10 @@ class PC(Algorithm, TakesInitialGraph, HasKnowledge, TakesIndependenceWrapper):
     def set_initial_graph_from_algorithm(self, algorithm: Algorithm):
         self.algorithm = algorithm
 
-    def get_knowledge(self) -> Knowledge:
+    def get_knowledge(self) -> IKnowledge:
         return self.knowledge
 
-    def set_knowledge(self, knowledge: Knowledge):
+    def set_knowledge(self, knowledge: IKnowledge):
         self.knowledge = knowledge
 
     def set_independence_wrapper(self, wrapper: IndependenceWrapper):

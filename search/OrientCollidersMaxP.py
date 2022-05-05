@@ -2,8 +2,8 @@ import itertools
 
 from search.idt.IndependenceTest import IndependenceTest
 from search.ConflictRule import ConflictRule
+from data.IKnowledge import IKnowledge
 from data.Knowledge import Knowledge
-from data.Knowledge2 import Knowledge2
 from graph.Graph import Graph
 from graph.Edges import Edges
 from graph.GraphUtils import GraphUtils
@@ -24,7 +24,7 @@ class OrientCollidersMaxP:
         self.independence_test = test
         self.depth: int = -1
         self.elapsed: int = 0
-        self.knowledge: Knowledge = Knowledge2()
+        self.knowledge: IKnowledge = Knowledge()
         self.use_heuristic: bool = False
         self.max_path_length: int = 3
         self.conflict_rule = ConflictRule.OVERWRITE

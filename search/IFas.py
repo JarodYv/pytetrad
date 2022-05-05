@@ -1,6 +1,6 @@
 from search.idt.IndependenceTest import IndependenceTest
 from SepsetMap import SepsetMap
-from data.Knowledge import Knowledge
+from data.IKnowledge import IKnowledge
 from graph.Triple import Triple
 from graph.Graph import Graph
 from graph.Node import Node
@@ -21,10 +21,10 @@ class IFas:
     def get_independence_test(self) -> IndependenceTest:
         raise NotImplementedError
 
-    def get_knowledge(self) -> Knowledge:
+    def get_knowledge(self) -> IKnowledge:
         raise NotImplementedError
 
-    def set_knowledge(self, knowledge: Knowledge):
+    def set_knowledge(self, knowledge: IKnowledge):
         raise NotImplementedError
 
     def get_sepsets(self) -> SepsetMap:

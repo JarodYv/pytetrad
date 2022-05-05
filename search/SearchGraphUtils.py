@@ -1,5 +1,5 @@
+from data.IKnowledge import IKnowledge
 from data.Knowledge import Knowledge
-from data.Knowledge2 import Knowledge2
 from graph.Graph import Graph
 from graph.Node import Node
 from graph.EdgeListGraph import EdgeListGraph
@@ -13,7 +13,7 @@ class SearchGraphUtils:
     """
 
     @classmethod
-    def pc_orient_bk(cls, bk: Knowledge, graph: Graph, nodes: List[Node]):
+    def pc_orient_bk(cls, bk: IKnowledge, graph: Graph, nodes: List[Node]):
         """
         Orients according to background knowledge.
         :return:
@@ -61,9 +61,9 @@ class SearchGraphUtils:
         return None
 
     @classmethod
-    def pattern_for_dag(cls, dag: Graph, knowledge: Knowledge = None) -> Graph:
+    def pattern_for_dag(cls, dag: Graph, knowledge: IKnowledge = None) -> Graph:
         if not knowledge:
-            knowledge = Knowledge2()
+            knowledge = Knowledge()
         pattern = EdgeListGraph(dag)
         rules = MeekRules()
         rules.set_knowledge(knowledge)

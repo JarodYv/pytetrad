@@ -11,8 +11,8 @@ from search.Fas import Fas
 from search.SepsetMap import SepsetMap
 from search.SearchGraphUtils import SearchGraphUtils
 from search.OrientCollidersMaxP import OrientCollidersMaxP
+from data.IKnowledge import IKnowledge
 from data.Knowledge import Knowledge
-from data.Knowledge2 import Knowledge2
 from graph.Node import Node
 from typing import List, Set
 import logging
@@ -53,7 +53,7 @@ class PcAll(GraphSearch):
         self.concurrent = Concurrent.YES
         self.depth: int = 1000
         self.elapsed_time: int = 0
-        self.knowledge: Knowledge = Knowledge2()
+        self.knowledge: IKnowledge = Knowledge()
         self.logger = logging.getLogger("PcAll")
         self.verbose: bool = False
         self.use_heuristic: bool = False
@@ -140,7 +140,7 @@ class PcAll(GraphSearch):
 
         return self.graph
 
-    def orient_unshielded_triples_conservative(self, knowledge: Knowledge):
+    def orient_unshielded_triples_conservative(self, knowledge: IKnowledge):
         self.logger.info("Starting Collider Orientation:")
         self.collider_triples = Set[Triple]()
         self.non_collider_triples = Set[Triple]()
@@ -206,7 +206,7 @@ class PcAll(GraphSearch):
                 return False
         return True
 
-    def _collider_allowed(self, x: Node, y: Node, z: Node, knowledge: Knowledge) -> bool:
+    def _collider_allowed(self, x: Node, y: Node, z: Node, knowledge: IKnowledge) -> bool:
         return PcAll.is_arrowpoint_allowed(x, y, knowledge) and PcAll.is_arrowpoint_allowed(z, y, knowledge)
 
     @classmethod
@@ -226,7 +226,7 @@ class PcAll(GraphSearch):
             graph.add_directed_edge(x, y)
             graph.add_directed_edge(z, y)
 
-    def orient_colliders_using_sepsets(self, sep: SepsetMap, knowledge: Knowledge, graph: Graph, verbose: bool,
+    def orient_colliders_using_sepsets(self, sep: SepsetMap, knowledge: IKnowledge, graph: Graph, verbose: bool,
                                        conflict_rule: ConflictRule):
         """ Step C of PC; orients colliders using specified sepset.
         That is, orients x *-* y *-* z as x *-> y <-* z just in case y is in Sepset({x, z}).
@@ -304,10 +304,10 @@ class PcAll(GraphSearch):
     def get_depth(self) -> int:
         return self.depth
 
-    def get_knowledge(self) -> Knowledge:
+    def get_knowledge(self) -> IKnowledge:
         return self.knowledge
 
-    def set_knowledge(self, knowledge: Knowledge):
+    def set_knowledge(self, knowledge: IKnowledge):
         self.knowledge = knowledge
 
     def get_independence_test(self) -> IndependenceTest:
@@ -323,7 +323,7 @@ class PcAll(GraphSearch):
         self.concurrent = _concurrent
 
     @classmethod
-    def is_arrowpoint_allowed(cls, from_node, to_node, knowledge: Knowledge) -> bool:
+    def is_arrowpoint_allowed(cls, from_node, to_node, knowledge: IKnowledge) -> bool:
         """ Checks if an arrowpoint is allowed by background knowledge.
 
         :param from_node:

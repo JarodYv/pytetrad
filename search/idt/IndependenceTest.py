@@ -5,15 +5,20 @@ import numpy as np
 
 
 class IndependenceTest:
-    """ Interface implemented by classes that do conditional independence testing.
+    """
+    Interface implemented by classes that do conditional independence testing.
     These classes are capable of serving as conditional independence "oracles" for constraint-based searches.
     """
 
     def ind_test_subset(self, nodes: List[Node]):
+        """
+        return an Independence test for a subset of the variables
+        """
         raise NotImplementedError
 
     def is_independents(self, x: Node, y: Node, z: List[Node]) -> bool:
-        """ Return true if the given independence question is judged true, false if not.
+        """
+        Return true if the given independence question is judged true, false if not.
         The independence question is of the form x _||_ y | z, z = <z1,...,zn>,
         where x, y, z1,...,zn are variables in the list returned by getVariableNames().
 

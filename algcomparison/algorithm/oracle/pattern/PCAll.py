@@ -7,7 +7,7 @@ from algcomparison.utils.TakesIndependenceWrapper import TakesIndependenceWrappe
 from algcomparison.utils.TakesInitialGraph import TakesInitialGraph
 from data.DataModel import DataModel
 from data.DataType import DataType
-from data.Knowledge import Knowledge
+from data.IKnowledge import IKnowledge
 from graph.EdgeListGraph import EdgeListGraph
 from graph.Graph import Graph
 from search.ConflictRule import ConflictRule
@@ -20,7 +20,7 @@ class PCAll(Algorithm, TakesInitialGraph, HasKnowledge, TakesIndependenceWrapper
         self.test = test
         self.algorithm = algorithm
         self.initial_graph: Optional[Graph] = None
-        self.knowledge: Optional[Knowledge] = None
+        self.knowledge: Optional[IKnowledge] = None
 
     def get_comparison_graph(self, graph: Graph) -> Graph:
         return SearchGraphUtils.pattern_for_dag(EdgeListGraph(graph, nodes=None))
@@ -47,10 +47,10 @@ class PCAll(Algorithm, TakesInitialGraph, HasKnowledge, TakesIndependenceWrapper
     def set_initial_graph_from_algorithm(self, algorithm: Algorithm):
         self.algorithm = algorithm
 
-    def get_knowledge(self) -> Knowledge:
+    def get_knowledge(self) -> IKnowledge:
         return self.knowledge
 
-    def set_knowledge(self, knowledge: Knowledge):
+    def set_knowledge(self, knowledge: IKnowledge):
         self.knowledge = knowledge
 
     def set_independence_wrapper(self, wrapper: IndependenceWrapper):

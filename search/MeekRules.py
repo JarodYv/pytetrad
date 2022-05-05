@@ -1,8 +1,8 @@
 from typing import Set, Dict, List
 
 from search.ImpliedOrientation import ImpliedOrientation
+from data.IKnowledge import IKnowledge
 from data.Knowledge import Knowledge
-from data.Knowledge2 import Knowledge2
 from graph.Graph import Graph
 from graph.Node import Node
 from graph.Edge import Edge
@@ -20,7 +20,7 @@ class MeekRules(ImpliedOrientation):
     """
 
     def __init__(self):
-        self.knowledge = Knowledge2()
+        self.knowledge = Knowledge()
         self.use_rule4 = not self.knowledge.is_empty()
         self.aggressively_prevent_cycles = False
         self.verbose = False
@@ -28,7 +28,7 @@ class MeekRules(ImpliedOrientation):
         self.changed_edges = Dict[Edge, Edge]
         self.logger = logging.getLogger("MeekRules")
 
-    def set_knowledge(self, knowledge: Knowledge):
+    def set_knowledge(self, knowledge: IKnowledge):
         if not knowledge:
             raise ValueError
         self.knowledge = knowledge
@@ -87,7 +87,7 @@ class MeekRules(ImpliedOrientation):
         self.verbose = verbose
 
     @staticmethod
-    def is_arrowpoint_allowed(from_node: Node, to_node: Node, knowledge: Knowledge) -> bool:
+    def is_arrowpoint_allowed(from_node: Node, to_node: Node, knowledge: IKnowledge) -> bool:
         if knowledge.is_empty():
             return True
         return not knowledge.is_required(str(to_node), str(from_node)) and not knowledge.is_forbidden(str(from_node),
