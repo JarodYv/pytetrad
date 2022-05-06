@@ -6,5 +6,5 @@
 
 - 于　鑫 (jarodyu@trussan.com)
 
-[GitHub](https://github.com/planplus/bcoz)
+[GitHub](https://github.com/jarodyv/bcoz)
 [开始阅读](/README)

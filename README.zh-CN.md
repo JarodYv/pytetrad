@@ -13,9 +13,15 @@
     <a href="https://pypi.org/project/do-calculus/">
         <img alt="" src="https://pypip.in/wheel/do-calculus/badge.svg">
     </a>
-    <a href="https://github.com/semantic-release/semantic-release">
-        <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg">
+    <a href="https://github.com/jarodyv/bcoz">
+        <img alt="license" src="https://img.shields.io/github/languages/top/planplus/bcoz"/>
     </a>
+    <a href="https://github.com/jarodyv/bcoz/LICENSE">
+        <img alt="license" src="https://img.shields.io/github/license/jarodyv/bcoz?style=flat-square">
+    </a>
+</p>
+<p align="center">
+:octocat:<a href="https://github.com/jarodyv/bcoz"><img src="https://img.shields.io/badge/-created%20for%20causal%20inference%20-blue?style=for-the-badge&logo=github"></a>:octocat:
 </p>
 <p align="center">
     README <a href="README.md">[English]</a> | <a href="README.zh-CN.md">[中文]</a>
