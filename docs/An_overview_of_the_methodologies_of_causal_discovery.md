@@ -73,9 +73,9 @@ $$
 
 这些都是因果关系和因果效用。我们可以将其总结为一张因果图（如图1）。因果发现的目的是从数据中找到正确的因果结构，就像下图一样：
 
-![](_media/how_can_ai_discover_cause_and_effect_p1.png)
+<p align="center"><img src="_media/how_can_ai_discover_cause_and_effect_p1.png"/></p>
 
-<center>图1 上面案例的因果图。温度是冰淇凌销量和鲨鱼袭击的共因。鲨鱼袭击又跟海岸的风向风速有关。</center>
+<p align="center">图1 上面案例的因果图。温度是冰淇凌销量和鲨鱼袭击的共因。鲨鱼袭击又跟海岸的风向风速有关。</p>
 
 ### 关联非因果
 
@@ -83,15 +83,17 @@ $$
 
 例如，鲨鱼袭击和冰淇凌销量有相关性或者说他们在统计上彼此相关（如图2）。但二者之间没有直接的因果关系--是因为维度这个共因导致二者呈现出相关性。这里温度被称为混淆因子。
 
-![img](_media/Screenshot-2021-12-15-at-14.18.50-1024x481.webp)
+<p align="center"><img src="_media/Screenshot-2021-12-15-at-14.18.50-1024x481.webp"/></p>
 
-<center>图2 关联不蕴含因果</center>
+
+
+<p align="center">图2 关联不蕴含因果</p>
 
 如果因果能直接从关联中获取，那么因果发现就变得很容易了，现在的机器学习算法应该早就解决了这个问题。但是正如上面所说的那样，因果发现需要特别的技术去发掘隐藏在关联背后的数据产生过程。
 
-![](_media/how_can_ai_discover_cause_and_effect_p3.png)
+<p align="center"><img src="_media/how_can_ai_discover_cause_and_effect_p3.png"/></p>
 
-<center>图3 因果关系产生数据中的相关性。因果AI能够发现这些潜在的因果关系，而机器学习只是分析相关性。</center>
+<p align="center">图3 因果关系产生数据中的相关性。因果AI能够发现这些潜在的因果关系，而机器学习只是分析相关性。</p>
 
 ### 从数据中找寻因果证据
 
@@ -115,15 +117,15 @@ $$
 
 “基于约束”的算法是因果发现算法的一类，它采用条件独立关系作为约束，然后构建能够表示这些约束的因果结构。
 
-![](_media/how_can_ai_discover_cause_and_effect_p4.png)
+<p align="center"><img src="_media/how_can_ai_discover_cause_and_effect_p4.png"/></p>
 
-<center>图4 基于约束的因果发现算法的流程。首先从数据中建立条件独立关系，然后因果发现算法发现能够表示这些条件独立约束的因果模型。算法最终输出一系列与数据匹配的候选因果结构，称之为“马尔可夫等价类”。</center>
+<p align="center">图4 基于约束的因果发现算法的流程。首先从数据中建立条件独立关系，然后因果发现算法发现能够表示这些条件独立约束的因果模型。算法最终输出一系列与数据匹配的候选因果结构，称之为“马尔可夫等价类”。</p>
 
 其中"PC算法"是一个经典的基于约束的因果发现算法，
 
 <div>
     <div style="width:300px;height:100%;display:inline-block;">
-        <img src="_media/how_can_ai_discover_cause_and_effect_p5.png"
+        <img src="_media/how_can_ai_discover_cause_and_effect_p5.png"/>
     </div>
     <div style="position: absolute; left:320px; height:100%;display:inline-block;">
         <p style="margin-top: 20px;">
@@ -139,7 +141,7 @@ $$
 </div>
 
 
-<center>图5 PC算法分解</center>
+<p align="center">图5 PC算法分解</p>
 
 ### 应用因果发现的挑战
 
@@ -149,9 +151,9 @@ $$
 
 许多流行的因果发现算法在大多数用例中都会做出过强的假设。例如，PC算法假设数据之外没有混杂因子，这通常是错误的，可能会带来不准确的因果模型。
 
-![](_media/how_can_ai_discover_cause_and_effect_p6.png)
+<p align="center"><img src="_media/how_can_ai_discover_cause_and_effect_p6.png"/></p>
 
-<center>图6 某些标准算法假设不存在未观测的混杂因子。但现实中往往存在未观测的混杂因子。例如季节（数据中没有）是温度和风速的共因。</center>
+<p align="center">图6 某些标准算法假设不存在未观测的混杂因子。但现实中往往存在未观测的混杂因子。例如季节（数据中没有）是温度和风速的共因。</p>
 
 #### 计算量大
 
