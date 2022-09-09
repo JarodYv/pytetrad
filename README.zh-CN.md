@@ -1,4 +1,4 @@
-<h1 align="center" style="border-bottom: none;">bcoz</h1>
+<h1 align="center" style="border-bottom: none;">pytetrad</h1>
 <h3 align="center">因果发现Python库</h3>
 <p align="center">
     <a href="https://github.com/bradendubois/do-calculus/actions?query=workflow%3ATest+branch%3Amain">

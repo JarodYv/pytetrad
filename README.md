@@ -1,4 +1,4 @@
-<h1 align="center" style="border-bottom: none;">bcoz</h1>
+<h1 align="center" style="border-bottom: none;">pytetrad</h1>
 <h3 align="center">A Python library for <i>causal inference</i></h3>
 <p align="center">
     <a href="https://github.com/bradendubois/do-calculus/actions?query=workflow%3ATest+branch%3Amain">
@@ -23,7 +23,5 @@
 <p align="center">
 <a href="README.md">[English]</a>  |  <a href="README.zh-CN.md">[中文]</a>
 </p>
-
-**bcoz** _[bɪˈkɔːz]_, with the similar pronunciation of because, is a powerful Python library for causal inference. 
 
 This project is under developing. Please **DO NOT** use it in product environment!
